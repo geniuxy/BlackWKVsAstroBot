@@ -18,12 +18,11 @@ void AItem::BeginPlay()
 
 	UE_LOG(LogTemp, Warning, TEXT("Begin Play!"));
 
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Cyan, TEXT("GEngine Begin!"));
+	FVector Location = GetActorLocation();
+	FVector ForwardVector = GetActorForwardVector();
 
-		DRAW_SPHERE(GetActorLocation());
-	}
+	DRAW_SPHERE(GetActorLocation());
+	DRAW_LINE(Location, Location + ForwardVector * 100);
 }
 
 // Called every frame
