@@ -23,10 +23,13 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 private:
+	UPROPERTY(VisibleAnywhere)
 	float RunningTime;
 
+	UPROPERTY(EditAnywhere)
 	float Amplitude = 2.5f;
 
+	UPROPERTY(EditAnywhere)
 	float TimeConstant = 5.f;
 
 };
