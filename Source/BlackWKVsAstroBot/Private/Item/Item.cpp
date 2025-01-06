@@ -24,9 +24,12 @@ void AItem::Tick(float DeltaTime)
 
 	float MoveSpeed = 50.f;
 	float RotatorSpeed = 45.f;
+	RunningTime += DeltaTime;
 
-	AddActorWorldOffset(FVector(MoveSpeed * DeltaTime, 0.f, 0.f));
+	float DeltaZ = Amplitude * FMath::Sin(RunningTime * TimeConstant);
+
+	AddActorWorldOffset(FVector(MoveSpeed * DeltaTime, 0.f, DeltaZ));
 	AddActorWorldRotation(FRotator(0.f, RotatorSpeed * DeltaTime, 0.f));
 	DRAW_SPHERE_SINGLE_FRAME(GetActorLocation());
-	DRAW_VECTOR_SINGLE_FRAME(GetActorLocation(),GetActorLocation() + GetActorForwardVector() * 100.f);
+	DRAW_VECTOR_SINGLE_FRAME(GetActorLocation(), GetActorLocation() + GetActorForwardVector() * 100.f);
 }
