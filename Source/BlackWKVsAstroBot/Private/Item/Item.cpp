@@ -15,19 +15,6 @@ AItem::AItem()
 void AItem::BeginPlay()
 {
 	Super::BeginPlay();
-
-	UE_LOG(LogTemp, Warning, TEXT("Begin Play!"));
-
-	SetActorLocation(FVector(9360.f, 600.f, 3700.f));
-	SetActorRotation(FRotator(45, 0 , 0));
-
-	FVector Location = GetActorLocation();
-	FVector ForwardVector = GetActorForwardVector();
-
-	DRAW_SPHERE(Location);
-	// DRAW_LINE(Location, Location + ForwardVector * 100);
-	// DRAW_POINT(Location + ForwardVector * 100);
-	DRAW_VECTOR(Location, Location + ForwardVector * 100);
 }
 
 // Called every frame
@@ -35,11 +22,11 @@ void AItem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (GEngine)
-	{
-		FString Name = GetName();
-		FString Message = FString::Printf(TEXT("Item Name: %s"), *Name);
-		GEngine->AddOnScreenDebugMessage(1, 60.f, FColor::Cyan, Message);
-		UE_LOG(LogTemp, Warning, TEXT("Item Name: %s"), *Name);
-	}
+	float MoveSpeed = 50.f;
+	float RotatorSpeed = 45.f;
+
+	AddActorWorldOffset(FVector(MoveSpeed * DeltaTime, 0.f, 0.f));
+	AddActorWorldRotation(FRotator(0.f, RotatorSpeed * DeltaTime, 0.f));
+	DRAW_SPHERE_SINGLE_FRAME(GetActorLocation());
+	DRAW_VECTOR_SINGLE_FRAME(GetActorLocation(),GetActorLocation() + GetActorForwardVector() * 100.f);
 }
