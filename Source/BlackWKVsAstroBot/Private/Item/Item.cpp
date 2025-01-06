@@ -2,13 +2,13 @@
 
 
 #include "Item/Item.h"
+#include "BlackWKVsAstroBot/BlackWKVsAstroBot.h"
 
 // Sets default values
 AItem::AItem()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 // Called when the game starts or when spawned
@@ -16,10 +16,14 @@ void AItem::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UE_LOG(LogTemp, Warning,TEXT("Begin Play!"));
+	UE_LOG(LogTemp, Warning, TEXT("Begin Play!"));
 
 	if (GEngine)
+	{
 		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Cyan, TEXT("GEngine Begin!"));
+
+		DRAW_SPHERE(GetActorLocation());
+	}
 }
 
 // Called every frame
@@ -34,6 +38,4 @@ void AItem::Tick(float DeltaTime)
 		GEngine->AddOnScreenDebugMessage(1, 60.f, FColor::Cyan, Message);
 		UE_LOG(LogTemp, Warning, TEXT("Item Name: %s"), *Name);
 	}
-
 }
-
