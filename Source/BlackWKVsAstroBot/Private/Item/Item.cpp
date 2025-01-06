@@ -21,8 +21,10 @@ void AItem::BeginPlay()
 	FVector Location = GetActorLocation();
 	FVector ForwardVector = GetActorForwardVector();
 
-	DRAW_SPHERE(GetActorLocation());
-	DRAW_LINE(Location, Location + ForwardVector * 100);
+	DRAW_SPHERE(Location);
+	// DRAW_LINE(Location, Location + ForwardVector * 100);
+	// DRAW_POINT(Location + ForwardVector * 100);
+	DRAW_VECTOR(Location, Location + ForwardVector * 100);
 }
 
 // Called every frame
