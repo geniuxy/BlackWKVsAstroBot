@@ -18,6 +18,9 @@ void AItem::BeginPlay()
 
 	UE_LOG(LogTemp, Warning, TEXT("Begin Play!"));
 
+	SetActorLocation(FVector(9360.f, 600.f, 3700.f));
+	SetActorRotation(FRotator(45, 0 , 0));
+
 	FVector Location = GetActorLocation();
 	FVector ForwardVector = GetActorForwardVector();
 
