@@ -17,19 +17,29 @@ void AItem::BeginPlay()
 	Super::BeginPlay();
 }
 
+float AItem::TransformedSin()
+{
+	return Amplitude * FMath::Sin(RunningTime * TimeConstant);
+}
+
+float AItem::TransformedCos()
+{
+	return Amplitude * FMath::Cos(RunningTime * TimeConstant);
+}
+
 // Called every frame
 void AItem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	float MoveSpeed = 50.f;
-	float RotatorSpeed = 45.f;
+	// float MoveSpeed = 50.f;
+	// float RotatorSpeed = 45.f;
 	RunningTime += DeltaTime;
 
-	float DeltaZ = Amplitude * FMath::Sin(RunningTime * TimeConstant);
+	// float DeltaZ = Amplitude * FMath::Sin(RunningTime * TimeConstant);
 
-	AddActorWorldOffset(FVector(MoveSpeed * DeltaTime, 0.f, DeltaZ));
-	AddActorWorldRotation(FRotator(0.f, RotatorSpeed * DeltaTime, 0.f));
+	// AddActorWorldOffset(FVector(MoveSpeed * DeltaTime, 0.f, DeltaZ));
+	// AddActorWorldRotation(FRotator(0.f, RotatorSpeed * DeltaTime, 0.f));
 	DRAW_SPHERE_SINGLE_FRAME(GetActorLocation());
 	DRAW_VECTOR_SINGLE_FRAME(GetActorLocation(), GetActorLocation() + GetActorForwardVector() * 100.f);
 }
