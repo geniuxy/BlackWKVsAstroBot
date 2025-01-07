@@ -42,4 +42,6 @@ void AItem::Tick(float DeltaTime)
 	// AddActorWorldRotation(FRotator(0.f, RotatorSpeed * DeltaTime, 0.f));
 	DRAW_SPHERE_SINGLE_FRAME(GetActorLocation());
 	DRAW_VECTOR_SINGLE_FRAME(GetActorLocation(), GetActorLocation() + GetActorForwardVector() * 100.f);
+
+	DRAW_POINT_SINGLE_FRAME(Avg<FVector>(GetActorLocation(), FVector::ZeroVector));
 }
