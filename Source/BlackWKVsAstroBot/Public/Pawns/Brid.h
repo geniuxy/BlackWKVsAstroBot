@@ -6,6 +6,8 @@
 #include "GameFramework/Pawn.h"
 #include "Brid.generated.h"
 
+class UCapsuleComponent;
+
 UCLASS()
 class BLACKWKVSASTROBOT_API ABrid : public APawn
 {
@@ -23,7 +25,10 @@ protected:
 
 private:
 	UPROPERTY(VisibleAnywhere)
-	class UCapsuleComponent* Capsule;
+	UCapsuleComponent* Capsule;
+
+	UPROPERTY(VisibleAnywhere)
+	USkeletalMeshComponent* BridMesh;
 
 public:
 };

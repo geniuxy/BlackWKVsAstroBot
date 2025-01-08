@@ -13,6 +13,9 @@ ABrid::ABrid()
 	Capsule->SetCapsuleHalfHeight(30.f);
 	Capsule->SetCapsuleRadius(15.f);
 	SetRootComponent(Capsule);
+	
+	BridMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("BridMesh"));
+	BridMesh->SetupAttachment(GetRootComponent());
 }
 
 void ABrid::BeginPlay()
