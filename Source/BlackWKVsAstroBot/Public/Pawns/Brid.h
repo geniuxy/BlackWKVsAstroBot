@@ -21,5 +21,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+private:
+	UPROPERTY(VisibleAnywhere)
+	class UCapsuleComponent* Capsule;
+
 public:
 };

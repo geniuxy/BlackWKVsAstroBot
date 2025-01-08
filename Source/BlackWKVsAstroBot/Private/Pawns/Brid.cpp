@@ -3,10 +3,16 @@
 
 #include "Pawns/Brid.h"
 
+#include "Components/CapsuleComponent.h"
+
 ABrid::ABrid()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	Capsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleComponent"));
+	Capsule->SetCapsuleHalfHeight(30.f);
+	Capsule->SetCapsuleRadius(15.f);
+	SetRootComponent(Capsule);
 }
 
 void ABrid::BeginPlay()
