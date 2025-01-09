@@ -6,6 +6,8 @@
 #include "GameFramework/Pawn.h"
 #include "Brid.generated.h"
 
+class UCameraComponent;
+class USpringArmComponent;
 class UCapsuleComponent;
 class UInputMappingContext;
 class UInputAction;
@@ -42,6 +44,12 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	USkeletalMeshComponent* BridMesh;
+
+	UPROPERTY(VisibleAnywhere)
+	USpringArmComponent* CameraBoom;
+
+	UPROPERTY(VisibleAnywhere)
+	UCameraComponent* ViewCamera;
 
 public:
 };
