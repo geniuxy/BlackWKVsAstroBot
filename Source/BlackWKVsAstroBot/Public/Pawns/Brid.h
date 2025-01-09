@@ -7,6 +7,9 @@
 #include "Brid.generated.h"
 
 class UCapsuleComponent;
+class UInputMappingContext;
+class UInputAction;
+struct FInputActionValue;
 
 UCLASS()
 class BLACKWKVSASTROBOT_API ABrid : public APawn
@@ -24,6 +27,14 @@ protected:
 	virtual void BeginPlay() override;
 
 	void MoveForward(float Value);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input)
+	UInputMappingContext* BridMappingContext;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input)
+	UInputAction* MoveAction;
+
+	void Move(const FInputActionValue& Value);
 
 private:
 	UPROPERTY(VisibleAnywhere)
