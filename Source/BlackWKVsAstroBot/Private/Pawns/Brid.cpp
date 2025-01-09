@@ -54,10 +54,21 @@ void ABrid::Move(const FInputActionValue& Value)
 {
 	const float DirectionValue = Value.Get<float>();
 
-	if (DirectionValue != 0.f)
+	if (GetController() && DirectionValue != 0.f)
 	{
 		FVector ForwardVector = GetActorForwardVector();
 		AddMovementInput(ForwardVector, DirectionValue);
+	}
+}
+
+void ABrid::Look(const FInputActionValue& Value)
+{
+	const FVector2D DirectionValue = Value.Get<FVector2D>();
+
+	if (GetController())
+	{
+		AddControllerYawInput(DirectionValue.X);
+		AddControllerPitchInput(DirectionValue.Y);
 	}
 }
 
@@ -72,5 +83,6 @@ void ABrid::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ABrid::Move);
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ABrid::Look);
 	}
 }
