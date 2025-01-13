@@ -6,6 +6,10 @@
 #include "GameFramework/Character.h"
 #include "Kratos.generated.h"
 
+struct FInputActionValue;
+class UInputAction;
+class UInputMappingContext;
+
 UCLASS()
 class BLACKWKVSASTROBOT_API AKratos : public ACharacter
 {
@@ -20,6 +24,22 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input)
+	UInputMappingContext* KratosMappingContext;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input)
+	UInputAction* MoveAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input)
+	UInputAction* LookAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input)
+	UInputAction* JumpAction;
+
+	void Move(const FInputActionValue& Value);
+	
+	void Look(const FInputActionValue& Value);
 
 public:
 };
