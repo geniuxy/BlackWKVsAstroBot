@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "Kratos.generated.h"
 
+class USpringArmComponent;
+class UCameraComponent;
 struct FInputActionValue;
 class UInputAction;
 class UInputMappingContext;
@@ -40,6 +42,13 @@ protected:
 	void Move(const FInputActionValue& Value);
 	
 	void Look(const FInputActionValue& Value);
+
+private:
+	UPROPERTY(VisibleAnywhere)
+	USpringArmComponent* CameraBoom;
+
+	UPROPERTY(VisibleAnywhere)
+	UCameraComponent* ViewCamera;
 
 public:
 };
