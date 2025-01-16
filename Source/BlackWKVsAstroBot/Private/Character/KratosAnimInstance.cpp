@@ -21,5 +21,8 @@ void UKratosAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	Super::NativeUpdateAnimation(DeltaSeconds);
 
 	if (KratosMovementComponent)
+	{
 		GroundSpeed = UKismetMathLibrary::VSizeXY(KratosMovementComponent->Velocity);
+		IsFalling = KratosMovementComponent->IsFalling();
+	}
 }
