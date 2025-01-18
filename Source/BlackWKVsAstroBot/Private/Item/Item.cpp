@@ -23,6 +23,7 @@ void AItem::BeginPlay()
 	Super::BeginPlay();
 
 	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AItem::OnSphereOverlap);
+	Sphere->OnComponentEndOverlap.AddDynamic(this, &AItem::ExitSphereOverlap);
 }
 
 float AItem::TransformedSin()
@@ -35,12 +36,23 @@ float AItem::TransformedCos()
 	return Amplitude * FMath::Cos(RunningTime * TimeConstant);
 }
 
-void AItem::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+void AItem::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+                            UPrimitiveComponent* OtherComp,
                             int OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	const FString OtherActorName = OtherActor->GetName();
 	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Cyan, OtherActorName);
+		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Cyan,
+		                                 FString::Printf(TEXT("Enter the Sphere: %s"), *OtherActorName));
+}
+
+void AItem::ExitSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+                              UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	const FString OtherActorName = OtherActor->GetName();
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Blue,
+										 FString::Printf(TEXT("Exit the Sphere: %s"), *OtherActorName));
 }
 
 // Called every frame
