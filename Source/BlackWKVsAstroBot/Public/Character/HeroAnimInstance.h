@@ -4,15 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
-#include "KratosAnimInstance.generated.h"
+#include "HeroAnimInstance.generated.h"
 
-class AKratos;
+class AHero;
 class UCharacterMovementComponent;
 /**
  * 
  */
 UCLASS()
-class BLACKWKVSASTROBOT_API UKratosAnimInstance : public UAnimInstance
+class BLACKWKVSASTROBOT_API UHeroAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
 
@@ -21,7 +21,7 @@ public:
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 	UPROPERTY(BlueprintReadOnly)
-	AKratos* KratosCharacter;
+	AHero* KratosCharacter;
 
 	UPROPERTY(BlueprintReadOnly, Category=Movement)
 	UCharacterMovementComponent* KratosMovementComponent;

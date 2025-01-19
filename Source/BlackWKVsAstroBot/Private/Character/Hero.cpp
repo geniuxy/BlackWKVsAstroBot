@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Character/Kratos.h"
+#include "Character/Hero.h"
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -9,7 +9,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
-AKratos::AKratos()
+AHero::AHero()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -20,17 +20,17 @@ AKratos::AKratos()
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 400.f, 0.f);
 	
-	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("KratosCameraBoom"));
+	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("HeroCameraBoom"));
 	CameraBoom->SetupAttachment(GetRootComponent());
 	CameraBoom->TargetArmLength = 300.f;
 	CameraBoom->bUsePawnControlRotation = true;
 
-	ViewCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("KratosViewCamera"));
+	ViewCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("HeroViewCamera"));
 	ViewCamera->SetupAttachment(CameraBoom);
 	ViewCamera->bUsePawnControlRotation = false;
 }
 
-void AKratos::BeginPlay()
+void AHero::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -44,7 +44,7 @@ void AKratos::BeginPlay()
 	}
 }
 
-void AKratos::Move(const FInputActionValue& Value)
+void AHero::Move(const FInputActionValue& Value)
 {
 	const FVector2D MoveAxisValue = Value.Get<FVector2D>();
 
@@ -61,7 +61,7 @@ void AKratos::Move(const FInputActionValue& Value)
 	}
 }
 
-void AKratos::Look(const FInputActionValue& Value)
+void AHero::Look(const FInputActionValue& Value)
 {
 	const FVector2D LookAxisValue = Value.Get<FVector2D>();
 
@@ -72,19 +72,19 @@ void AKratos::Look(const FInputActionValue& Value)
 	}
 }
 
-void AKratos::Tick(float DeltaTime)
+void AHero::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
 
-void AKratos::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void AHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AKratos::Move);
-		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AKratos::Look);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AKratos::Jump);
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AHero::Move);
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AHero::Look);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AHero::Jump);
 	}
 }

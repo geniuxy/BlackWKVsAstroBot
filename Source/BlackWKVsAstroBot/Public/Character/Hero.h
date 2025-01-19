@@ -4,21 +4,21 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "Kratos.generated.h"
+#include "Hero.generated.h"
 
 class USpringArmComponent;
 class UCameraComponent;
-struct FInputActionValue;
 class UInputAction;
 class UInputMappingContext;
+struct FInputActionValue;
 
 UCLASS()
-class BLACKWKVSASTROBOT_API AKratos : public ACharacter
+class BLACKWKVSASTROBOT_API AHero : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
-	AKratos();
+	AHero();
 
 	virtual void Tick(float DeltaTime) override;
 
