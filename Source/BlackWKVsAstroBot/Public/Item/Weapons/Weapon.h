@@ -14,6 +14,9 @@ class BLACKWKVSASTROBOT_API AWeapon : public AItem
 {
 	GENERATED_BODY()
 
+public:
+	virtual void Equip(USceneComponent* InParent, FName SocketName);
+
 protected:
 	virtual void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	                             UPrimitiveComponent* OtherComp, int OtherBodyIndex, bool bFromSweep,

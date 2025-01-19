@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Hero.generated.h"
 
+class AItem;
 class USpringArmComponent;
 class UCameraComponent;
 class UInputAction;
@@ -21,7 +22,7 @@ public:
 	AHero();
 
 	virtual void Tick(float DeltaTime) override;
-
+	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
@@ -39,9 +40,14 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input)
 	UInputAction* JumpAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input)
+	UInputAction* EquipAction;
+
 	void Move(const FInputActionValue& Value);
 	
 	void Look(const FInputActionValue& Value);
+
+	void Equip();
 
 private:
 	UPROPERTY(VisibleAnywhere)
@@ -50,5 +56,9 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* ViewCamera;
 
+	UPROPERTY(VisibleInstanceOnly)
+	AItem* OverlappingItem;
+
 public:
+	FORCEINLINE void SetOverlappingWeapon(AItem* Item) { OverlappingItem = Item; }
 };

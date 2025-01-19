@@ -2,6 +2,8 @@
 
 
 #include "Item/Item.h"
+
+#include "Character/Hero.h"
 #include "Components/SphereComponent.h"
 
 // Sets default values
@@ -37,22 +39,20 @@ float AItem::TransformedCos()
 }
 
 void AItem::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-                            UPrimitiveComponent* OtherComp,
-                            int OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+                            UPrimitiveComponent* OtherComp, int OtherBodyIndex, bool bFromSweep,
+                            const FHitResult& SweepResult)
 {
-	const FString OtherActorName = OtherActor->GetName();
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Cyan,
-		                                 FString::Printf(TEXT("Enter the Sphere: %s"), *OtherActorName));
+	AHero* Hero = Cast<AHero>(OtherActor);
+	if (Hero)
+		Hero->SetOverlappingWeapon(this);
 }
 
 void AItem::ExitSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                               UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	const FString OtherActorName = OtherActor->GetName();
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Blue,
-										 FString::Printf(TEXT("Exit the Sphere: %s"), *OtherActorName));
+	AHero* Hero = Cast<AHero>(OtherActor);
+	if (Hero)
+		Hero->SetOverlappingWeapon(nullptr);
 }
 
 // Called every frame

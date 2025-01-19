@@ -8,6 +8,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Item/Weapons/Weapon.h"
 
 AHero::AHero()
 {
@@ -72,6 +73,13 @@ void AHero::Look(const FInputActionValue& Value)
 	}
 }
 
+void AHero::Equip()
+{
+	AWeapon* OverlappingWeapon = Cast<AWeapon>(OverlappingItem);
+	if (OverlappingWeapon)
+		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"));
+}
+
 void AHero::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -86,5 +94,6 @@ void AHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AHero::Move);
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AHero::Look);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AHero::Jump);
+		EnhancedInputComponent->BindAction(EquipAction, ETriggerEvent::Triggered, this, &AHero::Equip);
 	}
 }
