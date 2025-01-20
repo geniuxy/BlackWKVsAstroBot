@@ -11,18 +11,19 @@ void UHeroAnimInstance::NativeInitializeAnimation()
 {
 	Super::NativeInitializeAnimation();
 
-	KratosCharacter = Cast<AHero>(TryGetPawnOwner());
-	if (KratosCharacter)
-		KratosMovementComponent = KratosCharacter->GetCharacterMovement();
+	HeroCharacter = Cast<AHero>(TryGetPawnOwner());
+	if (HeroCharacter)
+		HeroMovementComponent = HeroCharacter->GetCharacterMovement();
 }
 
 void UHeroAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
 
-	if (KratosMovementComponent)
+	if (HeroMovementComponent)
 	{
-		GroundSpeed = UKismetMathLibrary::VSizeXY(KratosMovementComponent->Velocity);
-		IsFalling = KratosMovementComponent->IsFalling();
+		GroundSpeed = UKismetMathLibrary::VSizeXY(HeroMovementComponent->Velocity);
+		IsFalling = HeroMovementComponent->IsFalling();
+		HeroState = HeroCharacter->GetHeroState();
 	}
 }

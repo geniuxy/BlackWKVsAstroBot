@@ -77,7 +77,10 @@ void AHero::Equip()
 {
 	AWeapon* OverlappingWeapon = Cast<AWeapon>(OverlappingItem);
 	if (OverlappingWeapon)
+	{
 		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"));
+		HeroState = EHeroState::EHS_EquippedOneHandedWeapon;
+	}
 }
 
 void AHero::Tick(float DeltaTime)

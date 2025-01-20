@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "HeroTypes.h"
 #include "Animation/AnimInstance.h"
 #include "HeroAnimInstance.generated.h"
 
@@ -21,14 +22,16 @@ public:
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 	UPROPERTY(BlueprintReadOnly)
-	AHero* KratosCharacter;
+	AHero* HeroCharacter;
 
 	UPROPERTY(BlueprintReadOnly, Category=Movement)
-	UCharacterMovementComponent* KratosMovementComponent;
+	UCharacterMovementComponent* HeroMovementComponent;
 
 	UPROPERTY(BlueprintReadOnly, Category=Movement)
 	float GroundSpeed;
 
 	UPROPERTY(BlueprintReadOnly, Category=Movement)
 	bool IsFalling;
+
+	EHeroState HeroState;
 };

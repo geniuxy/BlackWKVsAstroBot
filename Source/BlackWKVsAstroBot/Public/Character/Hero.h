@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "HeroTypes.h"
 #include "GameFramework/Character.h"
 #include "Hero.generated.h"
 
@@ -48,6 +49,8 @@ protected:
 	void Look(const FInputActionValue& Value);
 
 	void Equip();
+	
+	EHeroState HeroState;
 
 private:
 	UPROPERTY(VisibleAnywhere)
@@ -61,4 +64,5 @@ private:
 
 public:
 	FORCEINLINE void SetOverlappingWeapon(AItem* Item) { OverlappingItem = Item; }
+	FORCEINLINE EHeroState GetHeroState() const { return HeroState; }
 };
