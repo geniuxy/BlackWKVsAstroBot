@@ -33,5 +33,6 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category=Movement)
 	bool IsFalling;
 
+	UPROPERTY(BlueprintReadOnly, Category="Movement | Hero State")
 	EHeroState HeroState;
 };
