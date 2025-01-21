@@ -23,7 +23,7 @@ public:
 	AHero();
 
 	virtual void Tick(float DeltaTime) override;
-	
+
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
@@ -44,12 +44,19 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input)
 	UInputAction* EquipAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input)
+	UInputAction* AttackAction;
+
 	void Move(const FInputActionValue& Value);
-	
+
 	void Look(const FInputActionValue& Value);
 
 	void Equip();
+
+	void Attack();
 	
+	void ResetAttackCount();
+
 	EHeroState HeroState;
 
 private:
@@ -61,6 +68,18 @@ private:
 
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* OverlappingItem;
+
+	/** 
+	 * Attack
+	 */
+	UPROPERTY(EditDefaultsOnly, Category = Montages)
+	UAnimMontage* AttackMontage;
+
+	int32 AttackCount;
+	
+	float LastAttackTime;
+	
+	const float AttackWindow = 2.0f;
 
 public:
 	FORCEINLINE void SetOverlappingWeapon(AItem* Item) { OverlappingItem = Item; }
