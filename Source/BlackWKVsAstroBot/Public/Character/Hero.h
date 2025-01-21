@@ -54,8 +54,6 @@ protected:
 	void Equip();
 
 	void Attack();
-	
-	void ResetAttackCount();
 
 	EHeroState HeroState;
 

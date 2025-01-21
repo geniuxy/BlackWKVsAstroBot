@@ -91,23 +91,14 @@ void AHero::Attack()
 		AnimInstance->Montage_Play(AttackMontage);
 		const float CurrentTime = GetWorld()->GetTimeSeconds();
 
-		// 检查是否还在攻击时间窗口内
+		// check combo attack
 		if (CurrentTime - LastAttackTime < AttackWindow)
-		{
-			// 增加攻击次数
-			AttackCount++;
-		}
+			AttackCount = (AttackCount + 1) % 3;
 		else
-		{
-			// 重置攻击次数
 			AttackCount = 0;
-		}
-
-		// 更新上一次攻击的时间
 		LastAttackTime = CurrentTime;
 
 		FName SectionName;
-		// 根据攻击次数选择攻击动作
 		switch (AttackCount)
 		{
 		case 0:
@@ -118,8 +109,6 @@ void AHero::Attack()
 			break;
 		case 2:
 			SectionName = FName("Attack_Backhand");
-			// 重置攻击次数，或者设置最大连击数
-			AttackCount = 0;
 			break;
 		default:
 			SectionName = FName("Attack_Downward");
@@ -128,11 +117,6 @@ void AHero::Attack()
 		
 		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
 	}
-}
-
-void AHero::ResetAttackCount()
-{
-	AttackCount = 0;
 }
 
 void AHero::Tick(float DeltaTime)
