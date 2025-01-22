@@ -89,6 +89,8 @@ private:
 
 	const float AttackWindow = 2.0f;
 
+	bool CanAttack();
+
 public:
 	FORCEINLINE void SetOverlappingWeapon(AItem* Item) { OverlappingItem = Item; }
 	FORCEINLINE EHeroState GetHeroState() const { return HeroState; }

@@ -87,9 +87,11 @@ void AHero::Equip()
 
 void AHero::Attack()
 {
-	if (ActionState != EActionState::EAS_UnEquipped) return;
-	PlayAttackMontage();
-	ActionState = EActionState::EAS_Attacking;
+	if (CanAttack())
+	{
+		PlayAttackMontage();
+		ActionState = EActionState::EAS_Attacking;
+	}
 }
 
 void AHero::PlayAttackMontage()
@@ -128,7 +130,7 @@ void AHero::PlayAttackMontage()
 			SectionName = FName("Attack_Downward");
 			break;
 		}
-		
+
 		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
 	}
 }
@@ -136,6 +138,11 @@ void AHero::PlayAttackMontage()
 void AHero::FinishAttackState()
 {
 	ActionState = EActionState::EAS_UnEquipped;
+}
+
+bool AHero::CanAttack()
+{
+	return ActionState == EActionState::EAS_UnEquipped && HeroState != EHeroState::EHS_UnEquipped;
 }
 
 void AHero::Tick(float DeltaTime)
