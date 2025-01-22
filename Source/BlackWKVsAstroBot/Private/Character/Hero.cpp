@@ -47,6 +47,8 @@ void AHero::BeginPlay()
 
 void AHero::Move(const FInputActionValue& Value)
 {
+	if (ActionState != EActionState::EAS_UnEquipped) return;
+	
 	const FVector2D MoveAxisValue = Value.Get<FVector2D>();
 
 	if (Controller)
@@ -85,6 +87,13 @@ void AHero::Equip()
 
 void AHero::Attack()
 {
+	if (ActionState != EActionState::EAS_UnEquipped) return;
+	PlayAttackMontage();
+	ActionState = EActionState::EAS_Attacking;
+}
+
+void AHero::PlayAttackMontage()
+{
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance && AttackMontage)
 	{
@@ -97,6 +106,11 @@ void AHero::Attack()
 		else
 			AttackCount = 0;
 		LastAttackTime = CurrentTime;
+
+		// 打印last attack time
+		UE_LOG(LogTemp, Warning, TEXT("LastAttackTime: %f"), LastAttackTime);
+		// 打印当前攻击次数
+		UE_LOG(LogTemp, Warning, TEXT("AttackCount: %d"), AttackCount);
 
 		FName SectionName;
 		switch (AttackCount)
@@ -117,6 +131,11 @@ void AHero::Attack()
 		
 		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
 	}
+}
+
+void AHero::FinishAttackState()
+{
+	ActionState = EActionState::EAS_UnEquipped;
 }
 
 void AHero::Tick(float DeltaTime)

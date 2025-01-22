@@ -47,17 +47,27 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input)
 	UInputAction* AttackAction;
 
+	/**
+	 * callbacks for inputs
+	 */
 	void Move(const FInputActionValue& Value);
-
 	void Look(const FInputActionValue& Value);
-
 	void Equip();
-
 	void Attack();
 
-	EHeroState HeroState;
+	/**
+	 * Montage functions
+	 */
+
+	void PlayAttackMontage();
+
+	UFUNCTION(BlueprintCallable)
+	void FinishAttackState();
 
 private:
+	EHeroState HeroState = EHeroState::EHS_UnEquipped;
+	EActionState ActionState = EActionState::EAS_UnEquipped;
+
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* CameraBoom;
 
@@ -74,9 +84,9 @@ private:
 	UAnimMontage* AttackMontage;
 
 	int32 AttackCount;
-	
+
 	float LastAttackTime;
-	
+
 	const float AttackWindow = 2.0f;
 
 public:
