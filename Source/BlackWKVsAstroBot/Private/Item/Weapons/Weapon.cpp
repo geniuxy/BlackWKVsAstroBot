@@ -21,7 +21,12 @@ void AWeapon::ExitSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor
 
 void AWeapon::Equip(USceneComponent* InParent, FName SocketName)
 {
+	AttachWeaponTo(InParent, SocketName);
+	ItemState = EItemState::EIS_Equipped;
+}
+
+void AWeapon::AttachWeaponTo(USceneComponent* InParent, FName SocketName)
+{
 	FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, true);
 	ItemMesh->AttachToComponent(InParent, AttachmentRules, SocketName);
-	ItemState = EItemState::EIS_Equipped;
 }

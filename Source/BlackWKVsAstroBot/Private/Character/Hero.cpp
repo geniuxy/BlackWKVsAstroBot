@@ -20,7 +20,7 @@ AHero::AHero()
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 400.f, 0.f);
-	
+
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("HeroCameraBoom"));
 	CameraBoom->SetupAttachment(GetRootComponent());
 	CameraBoom->TargetArmLength = 300.f;
@@ -47,8 +47,8 @@ void AHero::BeginPlay()
 
 void AHero::Move(const FInputActionValue& Value)
 {
-	if (ActionState != EActionState::EAS_UnEquipped) return;
-	
+	if (ActionState != EActionState::EAS_UnOccupied) return;
+
 	const FVector2D MoveAxisValue = Value.Get<FVector2D>();
 
 	if (Controller)
@@ -82,6 +82,23 @@ void AHero::Equip()
 	{
 		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"));
 		HeroState = EHeroState::EHS_EquippedOneHandedWeapon;
+		EquippedWeapon = OverlappingWeapon;
+		OverlappingItem = nullptr;
+	}
+	else
+	{
+		if (CanDisArm())
+		{
+			PlayEquipMontage(FName("UnEquip"));
+			HeroState = EHeroState::EHS_UnEquipped;
+			ActionState = EActionState::EAS_Equipping;
+		}
+		else if (CanArm())
+		{
+			PlayEquipMontage(FName("Equip"));
+			HeroState = EHeroState::EHS_EquippedOneHandedWeapon;
+			ActionState = EActionState::EAS_Equipping;
+		}
 	}
 }
 
@@ -135,14 +152,46 @@ void AHero::PlayAttackMontage()
 	}
 }
 
-void AHero::FinishAttackState()
+void AHero::BackToUnoccupiedState()
 {
-	ActionState = EActionState::EAS_UnEquipped;
+	ActionState = EActionState::EAS_UnOccupied;
+}
+
+void AHero::PlayEquipMontage(FName SectionName)
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && EquipMontage)
+	{
+		AnimInstance->Montage_Play(EquipMontage);
+		AnimInstance->Montage_JumpToSection(SectionName, EquipMontage);
+	}
+}
+
+void AHero::DisArm()
+{
+	if (EquippedWeapon)
+		EquippedWeapon->AttachWeaponTo(GetMesh(), FName("SpineSocket"));
+}
+
+void AHero::Arm()
+{
+	if (EquippedWeapon)
+		EquippedWeapon->AttachWeaponTo(GetMesh(), FName("RightHandSocket"));
 }
 
 bool AHero::CanAttack()
 {
-	return ActionState == EActionState::EAS_UnEquipped && HeroState != EHeroState::EHS_UnEquipped;
+	return ActionState == EActionState::EAS_UnOccupied && HeroState != EHeroState::EHS_UnEquipped;
+}
+
+bool AHero::CanDisArm()
+{
+	return ActionState == EActionState::EAS_UnOccupied && HeroState != EHeroState::EHS_UnEquipped;
+}
+
+bool AHero::CanArm()
+{
+	return ActionState == EActionState::EAS_UnOccupied && HeroState == EHeroState::EHS_UnEquipped && EquippedWeapon;
 }
 
 void AHero::Tick(float DeltaTime)

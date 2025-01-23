@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "Hero.generated.h"
 
+class AWeapon;
 class AItem;
 class USpringArmComponent;
 class UCameraComponent;
@@ -62,11 +63,19 @@ protected:
 	void PlayAttackMontage();
 
 	UFUNCTION(BlueprintCallable)
-	void FinishAttackState();
+	void BackToUnoccupiedState();
+
+	void PlayEquipMontage(FName SectionName);
+
+	UFUNCTION(BlueprintCallable)
+	void DisArm();
+
+	UFUNCTION(BlueprintCallable)
+	void Arm();
 
 private:
 	EHeroState HeroState = EHeroState::EHS_UnEquipped;
-	EActionState ActionState = EActionState::EAS_UnEquipped;
+	EActionState ActionState = EActionState::EAS_UnOccupied;
 
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* CameraBoom;
@@ -76,6 +85,9 @@ private:
 
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* OverlappingItem;
+
+	UPROPERTY(VisibleInstanceOnly, Category = Weapon)
+	AWeapon* EquippedWeapon;
 
 	/** 
 	 * Attack
@@ -90,6 +102,16 @@ private:
 	const float AttackWindow = 2.0f;
 
 	bool CanAttack();
+
+	/**
+	 * Equip
+	 */
+	UPROPERTY(EditDefaultsOnly, Category = Montages)
+	UAnimMontage* EquipMontage;
+
+	bool CanDisArm();
+
+	bool CanArm();
 
 public:
 	FORCEINLINE void SetOverlappingWeapon(AItem* Item) { OverlappingItem = Item; }
