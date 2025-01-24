@@ -56,7 +56,7 @@ void AHero::Move(const FInputActionValue& Value)
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0.f, Rotation.Yaw, 0.f);
 
-		// 这一步是在乘以旋转矩阵后的值
+		// 这一步是 在乘以旋转矩阵后 的值
 		const FVector ForwardVector = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 		AddMovementInput(ForwardVector, MoveAxisValue.Y);
 		const FVector RightVector = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);

@@ -4,6 +4,7 @@
 #include "Item/Weapons/Weapon.h"
 
 #include "Character/Hero.h"
+#include "Components/SphereComponent.h"
 
 
 void AWeapon::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -23,6 +24,8 @@ void AWeapon::Equip(USceneComponent* InParent, FName SocketName)
 {
 	AttachWeaponTo(InParent, SocketName);
 	ItemState = EItemState::EIS_Equipped;
+	if (Sphere)
+		Sphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void AWeapon::AttachWeaponTo(USceneComponent* InParent, FName SocketName)
