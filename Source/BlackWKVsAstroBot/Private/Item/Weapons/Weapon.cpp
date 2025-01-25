@@ -3,9 +3,14 @@
 
 #include "Item/Weapons/Weapon.h"
 
-#include "Character/Hero.h"
+#include "Components/BoxComponent.h"
 #include "Components/SphereComponent.h"
 
+AWeapon::AWeapon()
+{
+	WeaponCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("Weapon Box"));
+	WeaponCollision->SetupAttachment(GetRootComponent());
+}
 
 void AWeapon::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                               UPrimitiveComponent* OtherComp, int OtherBodyIndex, bool bFromSweep,

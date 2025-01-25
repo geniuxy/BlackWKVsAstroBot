@@ -6,6 +6,7 @@
 #include "Item/Item.h"
 #include "Weapon.generated.h"
 
+class UBoxComponent;
 /**
  * 
  */
@@ -15,6 +16,8 @@ class BLACKWKVSASTROBOT_API AWeapon : public AItem
 	GENERATED_BODY()
 
 public:
+	AWeapon();
+	
 	virtual void Equip(USceneComponent* InParent, FName SocketName);
 
 	void AttachWeaponTo(USceneComponent* InParent, FName SocketName);
@@ -26,4 +29,7 @@ protected:
 
 	virtual void ExitSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	                               UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) override;
+
+	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
+	UBoxComponent* WeaponCollision;
 };
