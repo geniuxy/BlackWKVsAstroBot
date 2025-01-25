@@ -9,6 +9,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Item/Weapons/Weapon.h"
+#include "Components/BoxComponent.h"
 
 AHero::AHero()
 {
@@ -177,6 +178,12 @@ void AHero::Arm()
 {
 	if (EquippedWeapon)
 		EquippedWeapon->AttachWeaponTo(GetMesh(), FName("RightHandSocket"));
+}
+
+void AHero::SetWeaponCollision(ECollisionEnabled::Type CollisionType)
+{
+	if (EquippedWeapon && EquippedWeapon->GetWeaponCollision())
+		EquippedWeapon->GetWeaponCollision()->SetCollisionEnabled(CollisionType);
 }
 
 bool AHero::CanAttack()

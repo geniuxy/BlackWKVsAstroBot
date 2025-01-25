@@ -73,6 +73,9 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void Arm();
 
+	UFUNCTION(BlueprintCallable)
+	void SetWeaponCollision(ECollisionEnabled::Type CollisionType);
+
 private:
 	EHeroState HeroState = EHeroState::EHS_UnEquipped;
 	EActionState ActionState = EActionState::EAS_UnOccupied;
