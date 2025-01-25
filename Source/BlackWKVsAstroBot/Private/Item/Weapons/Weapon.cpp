@@ -5,11 +5,29 @@
 
 #include "Components/BoxComponent.h"
 #include "Components/SphereComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 AWeapon::AWeapon()
 {
 	WeaponCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("Weapon Box"));
 	WeaponCollision->SetupAttachment(GetRootComponent());
+	WeaponCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	WeaponCollision->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+	WeaponCollision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+	WeaponCollision->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+
+	BoxTraceStart = CreateDefaultSubobject<USceneComponent>(TEXT("Box Trace Start"));
+	BoxTraceStart->SetupAttachment(GetRootComponent());
+
+	BoxTraceEnd = CreateDefaultSubobject<USceneComponent>(TEXT("Box Trace End"));
+	BoxTraceEnd->SetupAttachment(GetRootComponent());
+}
+
+void AWeapon::BeginPlay()
+{
+	Super::BeginPlay();
+
+	WeaponCollision->OnComponentBeginOverlap.AddDynamic(this, &AWeapon::OnWeaponOverlap);
 }
 
 void AWeapon::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -23,6 +41,29 @@ void AWeapon::ExitSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor
                                 UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	Super::ExitSphereOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex);
+}
+
+void AWeapon::OnWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+                              UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
+                              const FHitResult& SweepResult)
+{
+	const FVector Start = BoxTraceStart->GetComponentLocation();
+	const FVector End = BoxTraceEnd->GetComponentLocation();
+
+	FHitResult HitResult;
+	UKismetSystemLibrary::BoxTraceSingle(
+		this,
+		Start,
+		End,
+		FVector(5.f, 5.f, 5.f),
+		BoxTraceStart->GetComponentRotation(),
+		TraceTypeQuery1,
+		false,
+		TArray<AActor*>{this},
+		EDrawDebugTrace::ForDuration,
+		HitResult,
+		true
+	);
 }
 
 void AWeapon::Equip(USceneComponent* InParent, FName SocketName)
