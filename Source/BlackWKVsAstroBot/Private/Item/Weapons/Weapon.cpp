@@ -5,6 +5,7 @@
 
 #include "Components/BoxComponent.h"
 #include "Components/SphereComponent.h"
+#include "Interfaces/HitInterface.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 AWeapon::AWeapon()
@@ -64,6 +65,11 @@ void AWeapon::OnWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 		HitResult,
 		true
 	);
+	if (HitResult.bBlockingHit && HitResult.GetActor())
+	{
+		if (IHitInterface* HitInterface = Cast<IHitInterface>(HitResult.GetActor()))
+			HitInterface->GetHit(HitResult.ImpactPoint);
+	}
 }
 
 void AWeapon::Equip(USceneComponent* InParent, FName SocketName)

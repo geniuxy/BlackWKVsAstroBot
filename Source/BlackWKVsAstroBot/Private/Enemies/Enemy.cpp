@@ -3,6 +3,7 @@
 
 #include "Enemies/Enemy.h"
 
+#include "BlackWKVsAstroBot/DebugMacros.h"
 #include "Components/CapsuleComponent.h"
 
 AEnemy::AEnemy()
@@ -32,5 +33,10 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void AEnemy::GetHit(const FVector& ImpactPoint)
+{
+	DRAW_SPHERE_COLOR(ImpactPoint, FColor::Emerald);
 }
 
