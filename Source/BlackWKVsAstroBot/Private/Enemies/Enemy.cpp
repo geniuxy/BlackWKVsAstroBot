@@ -38,5 +38,16 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void AEnemy::GetHit(const FVector& ImpactPoint)
 {
 	DRAW_SPHERE_COLOR(ImpactPoint, FColor::Emerald);
+	PlayHitReactLargeMontage(FName("FromRight"));
+}
+
+void AEnemy::PlayHitReactLargeMontage(FName HitFromSection)
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && HitReactLargeMontage)
+	{
+		AnimInstance->Montage_Play(HitReactLargeMontage);
+		AnimInstance->Montage_JumpToSection(HitFromSection, HitReactLargeMontage);
+	}
 }
 

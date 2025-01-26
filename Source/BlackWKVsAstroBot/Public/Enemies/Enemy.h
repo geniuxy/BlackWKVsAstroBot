@@ -24,5 +24,17 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	/**
+	 * Montage functions
+	 */
+	void PlayHitReactLargeMontage(FName HitFromSection);
+
+private:
+	/** 
+	 * Hit React Large
+	 */
+	UPROPERTY(EditDefaultsOnly, Category = Montages)
+	UAnimMontage* HitReactLargeMontage;
+
 public:
 };
