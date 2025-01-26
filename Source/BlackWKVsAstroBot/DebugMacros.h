@@ -17,3 +17,5 @@
 		DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Green, false, -1.f, 0, 1.f); \
 		DrawDebugPoint(GetWorld(), EndLocation, 30.f, FColor::Black, false, -1.f); \
 	}
+
+#define DRAW_ARROW(StartLocation, EndLocation, Color) UKismetSystemLibrary::DrawDebugArrow(this, StartLocation, EndLocation, 10.f, Color, 5.f)

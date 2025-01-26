@@ -5,6 +5,7 @@
 
 #include "BlackWKVsAstroBot/DebugMacros.h"
 #include "Components/CapsuleComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 AEnemy::AEnemy()
 {
@@ -20,25 +21,39 @@ AEnemy::AEnemy()
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 }
 
 void AEnemy::GetHit(const FVector& ImpactPoint)
 {
 	DRAW_SPHERE_COLOR(ImpactPoint, FColor::Emerald);
-	PlayHitReactLargeMontage(FName("FromRight"));
+	PlayHitReactLargeMontage(FName("FromLeft"));
+
+	const FVector ImpactLower = FVector(ImpactPoint.X, ImpactPoint.Y, GetActorLocation().Z);
+	const FVector ToHit = (ImpactLower - GetActorLocation()).GetSafeNormal();
+	const FVector Forward = GetActorForwardVector();
+	
+	// Forward * ToHit = |Forward||ToHit| * cos(theta)
+	// |Forward| = 1, |ToHit| = 1, so Forward * ToHit = cos(theta)
+	const double CosTheta = FVector::DotProduct(Forward, ToHit);
+	// Take the inverse cosine (arc-cosine) of cos(theta) to get theta
+	double Theta = FMath::Acos(CosTheta);
+	// convert from radians to degrees
+	Theta = FMath::RadiansToDegrees(Theta);
+
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Magenta, FString::Printf(TEXT("Theta: %f"), Theta));
+	DRAW_ARROW(GetActorLocation(), GetActorLocation() + Forward * 60.f, FColor::Red);
+	DRAW_ARROW(GetActorLocation(), GetActorLocation() + ToHit * 60.f, FColor::Green);
 }
 
 void AEnemy::PlayHitReactLargeMontage(FName HitFromSection)
@@ -50,4 +65,3 @@ void AEnemy::PlayHitReactLargeMontage(FName HitFromSection)
 		AnimInstance->Montage_JumpToSection(HitFromSection, HitReactLargeMontage);
 	}
 }
-
