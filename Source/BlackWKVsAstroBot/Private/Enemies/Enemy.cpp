@@ -50,6 +50,11 @@ void AEnemy::GetHit(const FVector& ImpactPoint)
 	// convert from radians to degrees
 	Theta = FMath::RadiansToDegrees(Theta);
 
+	const FVector CrossProduct = FVector::CrossProduct(Forward, ToHit);
+	if (CrossProduct.Z < 0.f)
+		Theta *= -1;
+	DRAW_ARROW(GetActorLocation(), GetActorLocation() + CrossProduct * 60.f, FColor::Purple);
+
 	if (GEngine)
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Magenta, FString::Printf(TEXT("Theta: %f"), Theta));
 	DRAW_ARROW(GetActorLocation(), GetActorLocation() + Forward * 60.f, FColor::Red);
