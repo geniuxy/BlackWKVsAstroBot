@@ -36,12 +36,15 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AEnemy::GetHit(const FVector& ImpactPoint)
 {
-	DRAW_SPHERE_COLOR(ImpactPoint, FColor::Emerald);
+	// DRAW_SPHERE_COLOR(ImpactPoint, FColor::Emerald);
 
 	DirectionalHitReact(ImpactPoint);
 
 	if (HitSound)
 		UGameplayStatics::PlaySoundAtLocation(this, HitSound, ImpactPoint);
+
+	if (HitParticles)
+		UGameplayStatics::SpawnEmitterAtLocation(this, HitParticles, ImpactPoint);
 }
 
 void AEnemy::DirectionalHitReact(const FVector& ImpactPoint)
@@ -71,6 +74,7 @@ void AEnemy::DirectionalHitReact(const FVector& ImpactPoint)
 		Section = FName("FromRight");
 	PlayHitReactLargeMontage(Section);
 
+	/*
 	DRAW_ARROW(GetActorLocation(), GetActorLocation() + CrossProduct * 60.f, FColor::Purple);
 
 	if (GEngine)
@@ -78,6 +82,7 @@ void AEnemy::DirectionalHitReact(const FVector& ImpactPoint)
 		                                 FString::Printf(TEXT("Theta: %f, Dir: %s"), Theta, *Section.ToString()));
 	DRAW_ARROW(GetActorLocation(), GetActorLocation() + Forward * 60.f, FColor::Red);
 	DRAW_ARROW(GetActorLocation(), GetActorLocation() + ToHit * 60.f, FColor::Green);
+	*/
 }
 
 void AEnemy::PlayHitReactLargeMontage(FName HitFromSection)

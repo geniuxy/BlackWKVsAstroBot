@@ -37,12 +37,12 @@ private:
 	 */
 	UPROPERTY(EditDefaultsOnly, Category = Montages)
 	UAnimMontage* HitReactLargeMontage;
-
-	/**
-	 * Hit Sound
-	 */
-	UPROPERTY(EditDefaultsOnly, Category = Sound)
+	
+	UPROPERTY(EditAnywhere, Category = Sound)
 	USoundBase* HitSound;
+
+	UPROPERTY(EditAnywhere, Category = VisualEffects)
+	UParticleSystem* HitParticles;
 
 public:
 };
