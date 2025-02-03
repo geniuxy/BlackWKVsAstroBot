@@ -183,7 +183,10 @@ void AHero::Arm()
 void AHero::SetWeaponCollision(ECollisionEnabled::Type CollisionType)
 {
 	if (EquippedWeapon && EquippedWeapon->GetWeaponCollision())
+	{
 		EquippedWeapon->GetWeaponCollision()->SetCollisionEnabled(CollisionType);
+		EquippedWeapon->IgnoreActors.Empty();	
+	}
 }
 
 bool AHero::CanAttack()

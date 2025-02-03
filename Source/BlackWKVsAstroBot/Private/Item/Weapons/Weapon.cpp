@@ -51,6 +51,12 @@ void AWeapon::OnWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 	const FVector Start = BoxTraceStart->GetComponentLocation();
 	const FVector End = BoxTraceEnd->GetComponentLocation();
 
+	TArray<AActor*> ActorsToIgnore;
+	ActorsToIgnore.Add(this);
+
+	for (AActor* Actor : IgnoreActors)
+		ActorsToIgnore.AddUnique(Actor);
+
 	FHitResult HitResult;
 	UKismetSystemLibrary::BoxTraceSingle(
 		this,
@@ -60,13 +66,14 @@ void AWeapon::OnWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 		BoxTraceStart->GetComponentRotation(),
 		TraceTypeQuery1,
 		false,
-		TArray<AActor*>{this},
+		ActorsToIgnore,
 		EDrawDebugTrace::ForDuration,
 		HitResult,
 		true
 	);
 	if (HitResult.bBlockingHit && HitResult.GetActor())
 	{
+		IgnoreActors.AddUnique(HitResult.GetActor());
 		if (IHitInterface* HitInterface = Cast<IHitInterface>(HitResult.GetActor()))
 			HitInterface->GetHit(HitResult.ImpactPoint);
 	}

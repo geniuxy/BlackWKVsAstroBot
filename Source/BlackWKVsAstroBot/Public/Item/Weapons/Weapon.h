@@ -22,6 +22,8 @@ public:
 
 	void AttachWeaponTo(USceneComponent* InParent, FName SocketName);
 
+	TArray<AActor*> IgnoreActors;
+
 protected:
 	virtual void BeginPlay() override;
 
