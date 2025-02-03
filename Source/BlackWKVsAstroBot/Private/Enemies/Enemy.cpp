@@ -5,6 +5,7 @@
 
 #include "BlackWKVsAstroBot/DebugMacros.h"
 #include "Components/CapsuleComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 AEnemy::AEnemy()
@@ -38,6 +39,9 @@ void AEnemy::GetHit(const FVector& ImpactPoint)
 	DRAW_SPHERE_COLOR(ImpactPoint, FColor::Emerald);
 
 	DirectionalHitReact(ImpactPoint);
+
+	if (HitSound)
+		UGameplayStatics::PlaySoundAtLocation(this, HitSound, ImpactPoint);
 }
 
 void AEnemy::DirectionalHitReact(const FVector& ImpactPoint)
@@ -68,10 +72,10 @@ void AEnemy::DirectionalHitReact(const FVector& ImpactPoint)
 	PlayHitReactLargeMontage(Section);
 
 	DRAW_ARROW(GetActorLocation(), GetActorLocation() + CrossProduct * 60.f, FColor::Purple);
-	
+
 	if (GEngine)
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Magenta,
-										 FString::Printf(TEXT("Theta: %f, Dir: %s"), Theta, *Section.ToString()));
+		                                 FString::Printf(TEXT("Theta: %f, Dir: %s"), Theta, *Section.ToString()));
 	DRAW_ARROW(GetActorLocation(), GetActorLocation() + Forward * 60.f, FColor::Red);
 	DRAW_ARROW(GetActorLocation(), GetActorLocation() + ToHit * 60.f, FColor::Green);
 }
