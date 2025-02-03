@@ -36,12 +36,11 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void AEnemy::GetHit(const FVector& ImpactPoint)
 {
 	DRAW_SPHERE_COLOR(ImpactPoint, FColor::Emerald);
-	PlayHitReactLargeMontage(FName("FromLeft"));
 
 	const FVector ImpactLower = FVector(ImpactPoint.X, ImpactPoint.Y, GetActorLocation().Z);
 	const FVector ToHit = (ImpactLower - GetActorLocation()).GetSafeNormal();
 	const FVector Forward = GetActorForwardVector();
-	
+
 	// Forward * ToHit = |Forward||ToHit| * cos(theta)
 	// |Forward| = 1, |ToHit| = 1, so Forward * ToHit = cos(theta)
 	const double CosTheta = FVector::DotProduct(Forward, ToHit);
@@ -53,10 +52,21 @@ void AEnemy::GetHit(const FVector& ImpactPoint)
 	const FVector CrossProduct = FVector::CrossProduct(Forward, ToHit);
 	if (CrossProduct.Z < 0.f)
 		Theta *= -1;
-	DRAW_ARROW(GetActorLocation(), GetActorLocation() + CrossProduct * 60.f, FColor::Purple);
 
+	FName Section("FromBack");
+	if (Theta >= -45.f && Theta < 45.f)
+		Section = FName("FromFront");
+	else if (Theta >= -135.f && Theta < -45.f)
+		Section = FName("FromLeft");
+	else if (Theta >= 45.f && Theta < 135.f)
+		Section = FName("FromRight");
+	PlayHitReactLargeMontage(Section);
+
+	DRAW_ARROW(GetActorLocation(), GetActorLocation() + CrossProduct * 60.f, FColor::Purple);
+	
 	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Magenta, FString::Printf(TEXT("Theta: %f"), Theta));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Magenta,
+		                                 FString::Printf(TEXT("Theta: %f, Dir: %s"), Theta, *Section.ToString()));
 	DRAW_ARROW(GetActorLocation(), GetActorLocation() + Forward * 60.f, FColor::Red);
 	DRAW_ARROW(GetActorLocation(), GetActorLocation() + ToHit * 60.f, FColor::Green);
 }
