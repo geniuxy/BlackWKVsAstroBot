@@ -22,5 +22,8 @@ class BLACKWKVSASTROBOT_API IHitInterface
 
 public:
 	// if pure virtual function of interface, need + " = 0"
-	virtual void GetHit(const FVector& ImpactPoint) = 0;
+	// virtual void GetHit(const FVector& ImpactPoint) = 0;
+
+	UFUNCTION(BlueprintNativeEvent)
+	void GetHit(const FVector& ImpactPoint);
 };
