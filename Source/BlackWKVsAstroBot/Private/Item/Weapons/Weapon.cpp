@@ -73,9 +73,12 @@ void AWeapon::OnWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 	);
 	if (HitResult.bBlockingHit && HitResult.GetActor())
 	{
-		IgnoreActors.AddUnique(HitResult.GetActor());
 		if (IHitInterface* HitInterface = Cast<IHitInterface>(HitResult.GetActor()))
 			HitInterface->GetHit(HitResult.ImpactPoint);
+
+		IgnoreActors.AddUnique(HitResult.GetActor());
+
+		CreateFieldSystem(HitResult.ImpactPoint);
 	}
 }
 
