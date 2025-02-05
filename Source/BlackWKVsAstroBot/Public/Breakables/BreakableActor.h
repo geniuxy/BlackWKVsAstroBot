@@ -7,6 +7,9 @@
 #include "Interfaces/HitInterface.h"
 #include "BreakableActor.generated.h"
 
+class UCapsuleComponent;
+class ATreasure;
+
 UCLASS()
 class BLACKWKVSASTROBOT_API ABreakableActor : public AActor, public IHitInterface
 {
@@ -22,10 +25,15 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-private:
-
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	UGeometryCollectionComponent* GeometryCollection;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UCapsuleComponent* Capsule;
+
+private:
+	UPROPERTY(EditAnywhere, Category="Breakable Properties")
+	TSubclassOf<ATreasure> TreasureClass;
 
 public:
 };
