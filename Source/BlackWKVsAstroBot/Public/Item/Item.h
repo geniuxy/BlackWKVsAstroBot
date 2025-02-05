@@ -31,10 +31,10 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Sine Parameters")
-	float Amplitude = 1.5f;
+	float Amplitude = 1.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Sine Parameters")
-	float TimeConstant = 3.f;
+	float TimeConstant = 6.f;
 
 	UFUNCTION(BlueprintPure)
 	float TransformedSin();
