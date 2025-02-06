@@ -3,6 +3,7 @@
 
 #include "Item/Weapons/Weapon.h"
 
+#include "NiagaraComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/SphereComponent.h"
 #include "Interfaces/HitInterface.h"
@@ -88,6 +89,8 @@ void AWeapon::Equip(USceneComponent* InParent, FName SocketName)
 	ItemState = EItemState::EIS_Equipped;
 	if (Sphere)
 		Sphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	if (EmbersEffect)
+		EmbersEffect->Deactivate();
 }
 
 void AWeapon::AttachWeaponTo(USceneComponent* InParent, FName SocketName)
