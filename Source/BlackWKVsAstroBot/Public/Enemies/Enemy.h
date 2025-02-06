@@ -7,6 +7,8 @@
 #include "Interfaces/HitInterface.h"
 #include "Enemy.generated.h"
 
+class UAttributeComponent;
+
 UCLASS()
 class BLACKWKVSASTROBOT_API AEnemy : public ACharacter, public IHitInterface
 {
@@ -32,12 +34,15 @@ protected:
 	void PlayHitReactLargeMontage(FName HitFromSection);
 
 private:
+	UPROPERTY(VisibleAnywhere)
+	UAttributeComponent* Attributes;
+	
 	/** 
 	 * Hit React Large
 	 */
 	UPROPERTY(EditDefaultsOnly, Category = Montages)
 	UAnimMontage* HitReactLargeMontage;
-	
+
 	UPROPERTY(EditAnywhere, Category = Sound)
 	USoundBase* HitSound;
 
