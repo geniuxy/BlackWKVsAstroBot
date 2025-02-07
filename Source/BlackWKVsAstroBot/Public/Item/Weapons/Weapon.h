@@ -18,7 +18,7 @@ class BLACKWKVSASTROBOT_API AWeapon : public AItem
 public:
 	AWeapon();
 
-	virtual void Equip(USceneComponent* InParent, FName SocketName);
+	virtual void Equip(USceneComponent* InParent, FName SocketName, AActor* NewOwner, APawn* NewInstigator);
 
 	void AttachWeaponTo(USceneComponent* InParent, FName SocketName);
 
@@ -50,6 +50,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
 	USceneComponent* BoxTraceEnd;
+
+	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
+	float Damage = 20.f;
 
 public:
 	FORCEINLINE UBoxComponent* GetWeaponCollision() const { return WeaponCollision; }

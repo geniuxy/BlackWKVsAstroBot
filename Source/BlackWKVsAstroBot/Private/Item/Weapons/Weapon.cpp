@@ -7,6 +7,7 @@
 #include "Components/BoxComponent.h"
 #include "Components/SphereComponent.h"
 #include "Interfaces/HitInterface.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 AWeapon::AWeapon()
@@ -72,6 +73,7 @@ void AWeapon::OnWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 		HitResult,
 		true
 	);
+
 	if (HitResult.bBlockingHit && HitResult.GetActor())
 	{
 		if (IHitInterface* HitInterface = Cast<IHitInterface>(HitResult.GetActor()))
@@ -80,11 +82,21 @@ void AWeapon::OnWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 		IgnoreActors.AddUnique(HitResult.GetActor());
 
 		CreateFieldSystem(HitResult.ImpactPoint);
+
+		UGameplayStatics::ApplyDamage(
+			HitResult.GetActor(),
+			Damage,
+			GetInstigator()->GetController(),
+			this,
+			UDamageType::StaticClass()
+		);
 	}
 }
 
-void AWeapon::Equip(USceneComponent* InParent, FName SocketName)
+void AWeapon::Equip(USceneComponent* InParent, FName SocketName, AActor* NewOwner, APawn* NewInstigator)
 {
+	SetOwner(NewOwner);
+	SetInstigator(NewInstigator);
 	AttachWeaponTo(InParent, SocketName);
 	ItemState = EItemState::EIS_Equipped;
 	if (Sphere)

@@ -5,7 +5,6 @@
 
 #include "Components/AttributeComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "Components/WidgetComponent.h"
 #include "HUD/HealthBarComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -28,9 +27,6 @@ AEnemy::AEnemy()
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (HealthBarComponent)
-		HealthBarComponent->SetHealthPercent(.8f);
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -92,6 +88,17 @@ void AEnemy::DirectionalHitReact(const FVector& ImpactPoint)
 	DRAW_ARROW(GetActorLocation(), GetActorLocation() + Forward * 60.f, FColor::Red);
 	DRAW_ARROW(GetActorLocation(), GetActorLocation() + ToHit * 60.f, FColor::Green);
 	*/
+}
+
+float AEnemy::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator,
+                         AActor* DamageCauser)
+{
+	if (Attributes && HealthBarComponent)
+	{
+		Attributes->ReceiveDamage(DamageAmount);
+		HealthBarComponent->SetHealthPercent(Attributes->GetHealthPercent());
+	}
+	return DamageAmount;
 }
 
 void AEnemy::PlayHitReactLargeMontage(FName HitFromSection)

@@ -81,7 +81,7 @@ void AHero::Equip()
 	AWeapon* OverlappingWeapon = Cast<AWeapon>(OverlappingItem);
 	if (OverlappingWeapon)
 	{
-		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"));
+		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"), this, this);
 		HeroState = EHeroState::EHS_EquippedOneHandedWeapon;
 		EquippedWeapon = OverlappingWeapon;
 		OverlappingItem = nullptr;
@@ -185,7 +185,7 @@ void AHero::SetWeaponCollision(ECollisionEnabled::Type CollisionType)
 	if (EquippedWeapon && EquippedWeapon->GetWeaponCollision())
 	{
 		EquippedWeapon->GetWeaponCollision()->SetCollisionEnabled(CollisionType);
-		EquippedWeapon->IgnoreActors.Empty();	
+		EquippedWeapon->IgnoreActors.Empty();
 	}
 }
 
