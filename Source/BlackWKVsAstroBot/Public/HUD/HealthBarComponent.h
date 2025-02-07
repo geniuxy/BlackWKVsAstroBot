@@ -6,6 +6,7 @@
 #include "Components/WidgetComponent.h"
 #include "HealthBarComponent.generated.h"
 
+class UHealthBar;
 /**
  * 
  */
@@ -13,5 +14,11 @@ UCLASS()
 class BLACKWKVSASTROBOT_API UHealthBarComponent : public UWidgetComponent
 {
 	GENERATED_BODY()
-	
+
+public:
+	void SetHealthPercent(float Percent);
+
+private:
+	UPROPERTY()
+	UHealthBar* HealthBarWidget;
 };

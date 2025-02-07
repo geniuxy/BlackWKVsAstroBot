@@ -6,6 +6,7 @@
 #include "Components/AttributeComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
+#include "HUD/HealthBarComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 AEnemy::AEnemy()
@@ -20,13 +21,16 @@ AEnemy::AEnemy()
 
 	Attributes = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attributes"));
 
-	HealthBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBar"));
-	HealthBar->SetupAttachment(GetRootComponent());
+	HealthBarComponent = CreateDefaultSubobject<UHealthBarComponent>(TEXT("HealthBar"));
+	HealthBarComponent->SetupAttachment(GetRootComponent());
 }
 
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (HealthBarComponent)
+		HealthBarComponent->SetHealthPercent(.8f);
 }
 
 void AEnemy::Tick(float DeltaTime)
