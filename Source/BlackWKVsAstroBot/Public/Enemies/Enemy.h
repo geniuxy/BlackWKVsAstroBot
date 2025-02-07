@@ -7,6 +7,7 @@
 #include "Interfaces/HitInterface.h"
 #include "Enemy.generated.h"
 
+class UWidgetComponent;
 class UAttributeComponent;
 
 UCLASS()
@@ -36,6 +37,9 @@ protected:
 private:
 	UPROPERTY(VisibleAnywhere)
 	UAttributeComponent* Attributes;
+
+	UPROPERTY(EditAnywhere)
+	UWidgetComponent* HealthBar;
 	
 	/** 
 	 * Hit React Large

@@ -3,11 +3,10 @@
 
 #include "Enemies/Enemy.h"
 
-#include "BlackWKVsAstroBot/DebugMacros.h"
 #include "Components/AttributeComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/WidgetComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "Kismet/KismetSystemLibrary.h"
 
 AEnemy::AEnemy()
 {
@@ -20,6 +19,9 @@ AEnemy::AEnemy()
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 
 	Attributes = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attributes"));
+
+	HealthBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBar"));
+	HealthBar->SetupAttachment(GetRootComponent());
 }
 
 void AEnemy::BeginPlay()
