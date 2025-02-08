@@ -26,8 +26,7 @@ public:
 	virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
 
 	void DirectionalHitReact(const FVector& ImpactPoint);
-	
-	void Die();
+
 
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent,
 	                         class AController* EventInstigator, AActor* DamageCauser) override;
@@ -40,8 +39,10 @@ protected:
 	 */
 	void PlayHitReactLargeMontage(FName HitFromSection);
 
+	void Die();
+
 private:
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess="true"))
 	UAttributeComponent* Attributes;
 
 	UPROPERTY(EditAnywhere)
@@ -53,13 +54,12 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = Montages)
 	UAnimMontage* HitReactLargeMontage;
 
-
 	UPROPERTY(EditAnywhere, Category = Sound)
 	USoundBase* HitSound;
 
 	UPROPERTY(EditAnywhere, Category = VisualEffects)
 	UParticleSystem* HitParticles;
-	
+
 	/** 
 	 * Death
 	 */
