@@ -41,6 +41,15 @@ protected:
 
 	void Die();
 
+	/**
+	 * Combat
+	 */
+	UPROPERTY()
+	AActor* CombatTarget;
+
+	UPROPERTY(EditAnywhere)
+	double CombatRadius = 500.f;
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess="true"))
 	UAttributeComponent* Attributes;

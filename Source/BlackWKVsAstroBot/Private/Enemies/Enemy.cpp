@@ -27,11 +27,25 @@ AEnemy::AEnemy()
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (HealthBarComponent)
+		HealthBarComponent->SetVisibility(false);
 }
 
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (CombatTarget)
+	{
+		const double DistanceToTarget = (CombatTarget->GetActorLocation() - GetActorLocation()).Size();
+		if (DistanceToTarget > CombatRadius)
+		{
+			CombatTarget = nullptr;
+			if (HealthBarComponent)
+				HealthBarComponent->SetVisibility(false);
+		}
+	}
 }
 
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -42,7 +56,8 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 {
 	// DRAW_SPHERE_COLOR(ImpactPoint, FColor::Emerald);
-
+	if (HealthBarComponent)
+		HealthBarComponent->SetVisibility(true);
 	if (Attributes && Attributes->IsAlive())
 		DirectionalHitReact(ImpactPoint);
 	else
@@ -104,6 +119,10 @@ void AEnemy::Die()
 		const FString RandomSectionName = FString::Printf(TEXT("Death%d"), RandomSectionIndex);
 		AnimInstance->Montage_JumpToSection(*RandomSectionName, DeathMontage);
 	}
+	if (HealthBarComponent)
+		HealthBarComponent->SetVisibility(false);
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	SetLifeSpan(5.f);
 }
 
 float AEnemy::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator,
@@ -114,6 +133,7 @@ float AEnemy::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEv
 		Attributes->ReceiveDamage(DamageAmount);
 		HealthBarComponent->SetHealthPercent(Attributes->GetHealthPercent());
 	}
+	CombatTarget = EventInstigator->GetPawn();
 	return DamageAmount;
 }
 
