@@ -18,7 +18,7 @@ class BLACKWKVSASTROBOT_API AWeapon : public AItem
 public:
 	AWeapon();
 
-	virtual void Equip(USceneComponent* InParent, FName SocketName, AActor* NewOwner, APawn* NewInstigator);
+	void Equip(USceneComponent* InParent, FName SocketName, AActor* NewOwner, APawn* NewInstigator);
 
 	void AttachWeaponTo(USceneComponent* InParent, FName SocketName);
 
