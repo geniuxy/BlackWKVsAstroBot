@@ -43,7 +43,10 @@ void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 {
 	// DRAW_SPHERE_COLOR(ImpactPoint, FColor::Emerald);
 
-	DirectionalHitReact(ImpactPoint);
+	if (Attributes && Attributes->IsAlive())
+		DirectionalHitReact(ImpactPoint);
+	else
+		Die();
 
 	if (HitSound)
 		UGameplayStatics::PlaySoundAtLocation(this, HitSound, ImpactPoint);
@@ -88,6 +91,19 @@ void AEnemy::DirectionalHitReact(const FVector& ImpactPoint)
 	DRAW_ARROW(GetActorLocation(), GetActorLocation() + Forward * 60.f, FColor::Red);
 	DRAW_ARROW(GetActorLocation(), GetActorLocation() + ToHit * 60.f, FColor::Green);
 	*/
+}
+
+void AEnemy::Die()
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && DeathMontage)
+	{
+		AnimInstance->Montage_Play(DeathMontage);
+		const int32 NumSections = 3; // 动画段的数量，可以动态调整 
+		const int32 RandomSectionIndex = FMath::RandRange(1, NumSections);
+		const FString RandomSectionName = FString::Printf(TEXT("Death%d"), RandomSectionIndex);
+		AnimInstance->Montage_JumpToSection(*RandomSectionName, DeathMontage);
+	}
 }
 
 float AEnemy::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator,

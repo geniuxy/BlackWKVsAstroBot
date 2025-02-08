@@ -76,13 +76,6 @@ void AWeapon::OnWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 
 	if (HitResult.bBlockingHit && HitResult.GetActor())
 	{
-		if (IHitInterface* HitInterface = Cast<IHitInterface>(HitResult.GetActor()))
-			HitInterface->Execute_GetHit(HitResult.GetActor(), HitResult.ImpactPoint);
-
-		IgnoreActors.AddUnique(HitResult.GetActor());
-
-		CreateFieldSystem(HitResult.ImpactPoint);
-
 		UGameplayStatics::ApplyDamage(
 			HitResult.GetActor(),
 			Damage,
@@ -90,6 +83,13 @@ void AWeapon::OnWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 			this,
 			UDamageType::StaticClass()
 		);
+
+		if (IHitInterface* HitInterface = Cast<IHitInterface>(HitResult.GetActor()))
+			HitInterface->Execute_GetHit(HitResult.GetActor(), HitResult.ImpactPoint);
+
+		IgnoreActors.AddUnique(HitResult.GetActor());
+
+		CreateFieldSystem(HitResult.ImpactPoint);
 	}
 }
 
