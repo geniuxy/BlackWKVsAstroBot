@@ -7,6 +7,7 @@
 #include "Interfaces/HitInterface.h"
 #include "Enemy.generated.h"
 
+class AAIController;
 class UHealthBarComponent;
 class UWidgetComponent;
 class UAttributeComponent;
@@ -30,6 +31,19 @@ public:
 
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent,
 	                         class AController* EventInstigator, AActor* DamageCauser) override;
+
+	/**
+	 *  Patrol
+	 */
+
+	UPROPERTY()
+	AAIController* EnemyController;
+
+	UPROPERTY(EditInstanceOnly, Category="AI Navigation")
+	AActor* PatrolTarget;
+
+	UPROPERTY(EditInstanceOnly, Category="AI Navigation")
+	TArray<AActor*> PatrolTargets;
 
 protected:
 	virtual void BeginPlay() override;

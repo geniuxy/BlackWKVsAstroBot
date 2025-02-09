@@ -3,11 +3,14 @@
 
 #include "Enemies/Enemy.h"
 
+#include "BlackWKVsAstroBot/DebugMacros.h"
 #include "Components/AttributeComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "HUD/HealthBarComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Navigation/PathFollowingComponent.h"
+#include "Runtime/AIModule/Classes/AIController.h"
 
 AEnemy::AEnemy()
 {
@@ -37,6 +40,22 @@ void AEnemy::BeginPlay()
 
 	if (HealthBarComponent)
 		HealthBarComponent->SetVisibility(false);
+
+	EnemyController = Cast<AAIController>(GetController());
+	if (EnemyController && PatrolTarget)
+	{
+		FAIMoveRequest MoveRequest;
+		MoveRequest.SetGoalActor(PatrolTarget);
+		MoveRequest.SetAcceptanceRadius(15.f);
+		FNavPathSharedPtr NavPath;
+		EnemyController->MoveTo(MoveRequest, &NavPath);
+		TArray<FNavPathPoint> PathPoints = NavPath->GetPathPoints();
+		for (auto& Point : PathPoints)
+		{
+			const FVector& Location = Point.Location;
+			DRAW_SPHERE_COLOR(Location, FColor::Red);
+		}
+	}
 }
 
 void AEnemy::Tick(float DeltaTime)
