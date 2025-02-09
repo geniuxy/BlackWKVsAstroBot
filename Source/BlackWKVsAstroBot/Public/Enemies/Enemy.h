@@ -45,15 +45,20 @@ public:
 	UPROPERTY(EditInstanceOnly, Category="AI Navigation")
 	TArray<AActor*> PatrolTargets;
 
+	UPROPERTY(EditAnywhere, Category="AI Navigation")
+	double PatrolRadius = 200.f;
+
 protected:
 	virtual void BeginPlay() override;
+
+	void Die();
+	
+	bool InTargetRange(AActor* Target, double Radius);
 
 	/**
 	 * Montage functions
 	 */
 	void PlayHitReactLargeMontage(FName HitFromSection);
-
-	void Die();
 
 	/**
 	 * Combat

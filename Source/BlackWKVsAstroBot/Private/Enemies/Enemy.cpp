@@ -64,12 +64,36 @@ void AEnemy::Tick(float DeltaTime)
 
 	if (CombatTarget)
 	{
-		const double DistanceToTarget = (CombatTarget->GetActorLocation() - GetActorLocation()).Size();
-		if (DistanceToTarget > CombatRadius)
+		if (!InTargetRange(CombatTarget, CombatRadius))
 		{
 			CombatTarget = nullptr;
 			if (HealthBarComponent)
 				HealthBarComponent->SetVisibility(false);
+		}
+	}
+	if (PatrolTarget && EnemyController)
+	{
+		if (InTargetRange(PatrolTarget, PatrolRadius))
+		{
+			TArray<AActor*> ValidTargets;
+			for (AActor* Target : PatrolTargets)
+			{
+				if (Target != PatrolTarget)
+					ValidTargets.AddUnique(Target);
+			}
+
+			const int32 NumValidTargets = ValidTargets.Num();
+			if (NumValidTargets > 0)
+			{
+				const int32 TargetSection = FMath::RandRange(0, NumValidTargets - 1);
+				AActor* NextTarget = ValidTargets[TargetSection];
+				PatrolTarget = NextTarget;
+
+				FAIMoveRequest MoveRequest;
+				MoveRequest.SetGoalActor(PatrolTarget);
+				MoveRequest.SetAcceptanceRadius(15.f);
+				EnemyController->MoveTo(MoveRequest);
+			}
 		}
 	}
 }
@@ -149,6 +173,14 @@ void AEnemy::Die()
 		HealthBarComponent->SetVisibility(false);
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	SetLifeSpan(5.f);
+}
+
+bool AEnemy::InTargetRange(AActor* Target, double Radius)
+{
+	const double DistanceToTarget = (Target->GetActorLocation() - GetActorLocation()).Size();
+	DRAW_SPHERE_SINGLE_FRAME(GetActorLocation());
+	DRAW_SPHERE_SINGLE_FRAME(Target->GetActorLocation());
+	return DistanceToTarget <= Radius;
 }
 
 float AEnemy::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator,
