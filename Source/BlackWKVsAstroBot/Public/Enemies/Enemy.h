@@ -48,13 +48,28 @@ public:
 	UPROPERTY(EditAnywhere, Category="AI Navigation")
 	double PatrolRadius = 200.f;
 
+	FTimerHandle PatrolTimer;
+	void PatrolTimerFinished();
+
+	UPROPERTY(EditAnywhere, Category = "AI Navigation")
+	float PatrolWaitMin = 5.f;
+	UPROPERTY(EditAnywhere, Category = "AI Navigation")
+	float PatrolWaitMax = 10.f;
+
+	void CheckCombatTarget();
+	void CheckPatrolTarget();
+
 protected:
 	virtual void BeginPlay() override;
 
 	void Die();
-	
+
 	bool InTargetRange(AActor* Target, double Radius);
 
+	void MoveToTarget(AActor* Target);
+
+	AActor* ChoosingNextPatrolTarget();
+	
 	/**
 	 * Montage functions
 	 */
