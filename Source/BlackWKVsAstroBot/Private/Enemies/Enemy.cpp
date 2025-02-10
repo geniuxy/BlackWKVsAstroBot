@@ -151,6 +151,20 @@ void AEnemy::CheckCombatTarget()
 		EnemyState = EEnemyState::EES_Patrolling;
 		GetCharacterMovement()->MaxWalkSpeed = 30.f;
 		MoveToTarget(PatrolTarget);
+		UE_LOG(LogTemp, Warning, TEXT("back to patrol target, lose interest!"));
+	}
+	else if (!InTargetRange(CombatTarget, AttackRadius) && EnemyState != EEnemyState::EES_Chasing)
+	{
+		EnemyState = EEnemyState::EES_Chasing;
+		GetCharacterMovement()->MaxWalkSpeed = 300.f;
+		MoveToTarget(CombatTarget);
+		UE_LOG(LogTemp, Warning, TEXT("chasing target!"));
+	}
+	else if (InTargetRange(CombatTarget, AttackRadius) && EnemyState != EEnemyState::EES_Attacking)
+	{
+		EnemyState = EEnemyState::EES_Attacking;
+		//TODO: play attack montage
+		UE_LOG(LogTemp, Warning, TEXT("Attack!"));
 	}
 }
 
@@ -189,7 +203,7 @@ AActor* AEnemy::ChoosingNextPatrolTarget()
 
 void AEnemy::PawnSeen(APawn* SeenPawn)
 {
-	if (EnemyState == EEnemyState::EES_Chasing) return;
+	if (EnemyState != EEnemyState::EES_Patrolling) return;
 	if (SeenPawn->ActorHasTag(FName("Hero")))
 	{
 		EnemyState = EEnemyState::EES_Chasing;
@@ -197,6 +211,7 @@ void AEnemy::PawnSeen(APawn* SeenPawn)
 		GetCharacterMovement()->MaxWalkSpeed = 300.f;
 		CombatTarget = SeenPawn;
 		MoveToTarget(CombatTarget);
+		UE_LOG(LogTemp, Warning, TEXT("see the character, chasing!"));
 	}
 }
 
