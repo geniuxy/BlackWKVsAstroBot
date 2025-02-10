@@ -31,7 +31,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input)
-	UInputMappingContext* KratosMappingContext;
+	UInputMappingContext* MappingContext;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input)
 	UInputAction* MoveAction;

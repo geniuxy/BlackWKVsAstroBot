@@ -4,6 +4,7 @@
 #include "Enemies/Enemy.h"
 
 #include "BlackWKVsAstroBot/DebugMacros.h"
+#include "Character/Hero.h"
 #include "Components/AttributeComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Perception/PawnSensingComponent.h"
@@ -182,9 +183,18 @@ AActor* AEnemy::ChoosingNextPatrolTarget()
 	return nullptr;
 }
 
-void AEnemy::PawnSeen(APawn* Pawn)
+void AEnemy::PawnSeen(APawn* SeenPawn)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Pawn Seen!"));
+	if (EnemyState == EEnemyState::EES_Chasing) return;
+	if (SeenPawn->ActorHasTag(FName("Hero")))
+	{
+		EnemyState = EEnemyState::EES_Chasing;
+		GetWorldTimerManager().ClearTimer(PatrolTimer);
+		GetCharacterMovement()->MaxWalkSpeed = 300.f;
+		CombatTarget = SeenPawn;
+		MoveToTarget(CombatTarget);
+		UE_LOG(LogTemp, Warning, TEXT("Pawn Seen!"));
+	}
 }
 
 bool AEnemy::InTargetRange(AActor* Target, double Radius)

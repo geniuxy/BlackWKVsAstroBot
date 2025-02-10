@@ -3,11 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Character/HeroTypes.h"
 #include "GameFramework/Character.h"
 #include "Interfaces/HitInterface.h"
 #include "Perception/PawnSensingComponent.h"
 #include "Enemy.generated.h"
 
+enum class EEnemyState : uint8;
 class AAIController;
 class UHealthBarComponent;
 class UWidgetComponent;
@@ -88,6 +90,8 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	double CombatRadius = 500.f;
+
+	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess="true"))

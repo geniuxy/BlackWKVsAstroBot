@@ -41,9 +41,11 @@ void AHero::BeginPlay()
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem =
 			ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
-			Subsystem->AddMappingContext(KratosMappingContext, 0);
+			Subsystem->AddMappingContext(MappingContext, 0);
 		}
 	}
+
+	Tags.Add(FName("Hero"));
 }
 
 void AHero::Move(const FInputActionValue& Value)
