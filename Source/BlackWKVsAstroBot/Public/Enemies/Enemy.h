@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Interfaces/HitInterface.h"
+#include "Perception/PawnSensingComponent.h"
 #include "Enemy.generated.h"
 
 class AAIController;
@@ -60,6 +61,7 @@ public:
 	void CheckPatrolTarget();
 
 protected:
+	UFUNCTION()
 	virtual void BeginPlay() override;
 
 	void Die();
@@ -69,6 +71,9 @@ protected:
 	void MoveToTarget(AActor* Target);
 
 	AActor* ChoosingNextPatrolTarget();
+
+	UFUNCTION()
+	void PawnSeen(APawn* Pawn);
 	
 	/**
 	 * Montage functions
@@ -91,6 +96,9 @@ private:
 	UPROPERTY(EditAnywhere)
 	UHealthBarComponent* HealthBarComponent;
 
+	UPROPERTY()
+	UPawnSensingComponent* PawnSensingComponent;
+	
 	/** 
 	 * Hit React Large
 	 */

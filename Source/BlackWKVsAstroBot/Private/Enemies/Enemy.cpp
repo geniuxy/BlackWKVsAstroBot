@@ -6,6 +6,7 @@
 #include "BlackWKVsAstroBot/DebugMacros.h"
 #include "Components/AttributeComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Perception/PawnSensingComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "HUD/HealthBarComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -27,6 +28,10 @@ AEnemy::AEnemy()
 	HealthBarComponent = CreateDefaultSubobject<UHealthBarComponent>(TEXT("HealthBar"));
 	HealthBarComponent->SetupAttachment(GetRootComponent());
 
+	PawnSensingComponent = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensing"));
+	PawnSensingComponent->SightRadius = 4000.f;
+	PawnSensingComponent->SetPeripheralVisionAngle(45.f);
+
 	// When chasing a character, can face the direction of the movement.
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	bUseControllerRotationPitch = false;
@@ -43,6 +48,9 @@ void AEnemy::BeginPlay()
 
 	EnemyController = Cast<AAIController>(GetController());
 	MoveToTarget(PatrolTarget);
+
+	if (PawnSensingComponent)
+		PawnSensingComponent->OnSeePawn.AddDynamic(this, &AEnemy::PawnSeen);
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -172,6 +180,11 @@ AActor* AEnemy::ChoosingNextPatrolTarget()
 		return ValidTargets[TargetSection];
 	}
 	return nullptr;
+}
+
+void AEnemy::PawnSeen(APawn* Pawn)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Pawn Seen!"));
 }
 
 bool AEnemy::InTargetRange(AActor* Target, double Radius)
