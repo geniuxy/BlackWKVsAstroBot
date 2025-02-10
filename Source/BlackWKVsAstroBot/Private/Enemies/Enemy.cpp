@@ -58,9 +58,10 @@ void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	CheckCombatTarget();
-
-	CheckPatrolTarget();
+	if (EnemyState > EEnemyState::EES_Patrolling)
+		CheckCombatTarget();
+	else
+		CheckPatrolTarget();
 }
 
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
