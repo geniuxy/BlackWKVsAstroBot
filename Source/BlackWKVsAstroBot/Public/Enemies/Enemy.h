@@ -100,7 +100,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	UHealthBarComponent* HealthBarComponent;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere)
 	UPawnSensingComponent* PawnSensingComponent;
 	
 	/** 
