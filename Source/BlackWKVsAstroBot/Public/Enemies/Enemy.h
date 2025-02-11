@@ -3,9 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Character/BaseCharacter.h"
 #include "Character/HeroTypes.h"
-#include "GameFramework/Character.h"
-#include "Interfaces/HitInterface.h"
 #include "Perception/PawnSensingComponent.h"
 #include "Enemy.generated.h"
 
@@ -16,7 +15,7 @@ class UWidgetComponent;
 class UAttributeComponent;
 
 UCLASS()
-class BLACKWKVSASTROBOT_API AEnemy : public ACharacter, public IHitInterface
+class BLACKWKVSASTROBOT_API AEnemy : public ABaseCharacter
 {
 	GENERATED_BODY()
 
@@ -29,16 +28,12 @@ public:
 
 	virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
 
-	void DirectionalHitReact(const FVector& ImpactPoint);
-
-
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent,
 	                         class AController* EventInstigator, AActor* DamageCauser) override;
 
 	/**
 	 *  Patrol
 	 */
-
 	UPROPERTY()
 	AAIController* EnemyController;
 
@@ -66,7 +61,9 @@ protected:
 	UFUNCTION()
 	virtual void BeginPlay() override;
 
-	void Die();
+	virtual void Die() override;
+
+	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 
 	bool InTargetRange(AActor* Target, double Radius);
 
@@ -76,11 +73,6 @@ protected:
 
 	UFUNCTION()
 	void PawnSeen(APawn* Pawn);
-	
-	/**
-	 * Montage functions
-	 */
-	void PlayHitReactLargeMontage(FName HitFromSection);
 
 	/**
 	 * Combat
@@ -94,35 +86,12 @@ protected:
 	UPROPERTY(EditAnywhere)
 	double AttackRadius = 150.f;
 
-	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
-
 private:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess="true"))
-	UAttributeComponent* Attributes;
-
 	UPROPERTY(EditAnywhere)
 	UHealthBarComponent* HealthBarComponent;
 
 	UPROPERTY(EditAnywhere)
 	UPawnSensingComponent* PawnSensingComponent;
-	
-	/** 
-	 * Hit React Large
-	 */
-	UPROPERTY(EditDefaultsOnly, Category = Montages)
-	UAnimMontage* HitReactLargeMontage;
-
-	UPROPERTY(EditAnywhere, Category = Sound)
-	USoundBase* HitSound;
-
-	UPROPERTY(EditAnywhere, Category = VisualEffects)
-	UParticleSystem* HitParticles;
-
-	/** 
-	 * Death
-	 */
-	UPROPERTY(EditDefaultsOnly, Category = Montages)
-	UAnimMontage* DeathMontage;
 
 public:
 };

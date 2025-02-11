@@ -3,12 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BaseCharacter.h"
 #include "HeroTypes.h"
-#include "GameFramework/Character.h"
 #include "Hero.generated.h"
 
 class AWeapon;
-class AItem;
+class AItem; 
 class USpringArmComponent;
 class UCameraComponent;
 class UInputAction;
@@ -16,7 +16,7 @@ class UInputMappingContext;
 struct FInputActionValue;
 
 UCLASS()
-class BLACKWKVSASTROBOT_API AHero : public ACharacter
+class BLACKWKVSASTROBOT_API AHero : public ABaseCharacter
 {
 	GENERATED_BODY()
 
@@ -54,16 +54,15 @@ protected:
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void Equip();
-	void Attack();
+	virtual void Attack() override;
 
 	/**
 	 * Montage functions
 	 */
 
-	void PlayAttackMontage();
+	virtual void PlayAttackMontage() override;
 
-	UFUNCTION(BlueprintCallable)
-	void BackToUnoccupiedState();
+	virtual void BackToUnoccupiedState() override;
 
 	void PlayEquipMontage(FName SectionName);
 
@@ -72,9 +71,6 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void Arm();
-
-	UFUNCTION(BlueprintCallable)
-	void SetWeaponCollision(ECollisionEnabled::Type CollisionType);
 
 private:
 	EHeroState HeroState = EHeroState::EHS_UnEquipped;
@@ -89,22 +85,16 @@ private:
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* OverlappingItem;
 
-	UPROPERTY(VisibleInstanceOnly, Category = Weapon)
-	AWeapon* EquippedWeapon;
-
 	/** 
 	 * Attack
 	 */
-	UPROPERTY(EditDefaultsOnly, Category = Montages)
-	UAnimMontage* AttackMontage;
-
 	int32 AttackCount;
 
 	float LastAttackTime;
 
 	const float AttackWindow = 2.0f;
 
-	bool CanAttack();
+	virtual bool CanAttack() override;
 
 	/**
 	 * Equip

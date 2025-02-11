@@ -182,15 +182,6 @@ void AHero::Arm()
 		EquippedWeapon->AttachWeaponTo(GetMesh(), FName("RightHandSocket"));
 }
 
-void AHero::SetWeaponCollision(ECollisionEnabled::Type CollisionType)
-{
-	if (EquippedWeapon && EquippedWeapon->GetWeaponCollision())
-	{
-		EquippedWeapon->GetWeaponCollision()->SetCollisionEnabled(CollisionType);
-		EquippedWeapon->IgnoreActors.Empty();
-	}
-}
-
 bool AHero::CanAttack()
 {
 	return ActionState == EActionState::EAS_UnOccupied && HeroState != EHeroState::EHS_UnEquipped;
