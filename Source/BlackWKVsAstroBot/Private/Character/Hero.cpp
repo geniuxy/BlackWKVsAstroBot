@@ -107,6 +107,8 @@ void AHero::Equip()
 
 void AHero::Attack()
 {
+	Super::Attack();
+	
 	if (CanAttack())
 	{
 		PlayAttackMontage();
@@ -116,6 +118,8 @@ void AHero::Attack()
 
 void AHero::PlayAttackMontage()
 {
+	Super::PlayAttackMontage();
+	
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance && AttackMontage)
 	{

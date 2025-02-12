@@ -67,6 +67,29 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
+
+void AEnemy::Attack()
+{
+	Super::Attack();
+
+	PlayAttackMontage();
+}
+
+void AEnemy::PlayAttackMontage()
+{
+	Super::PlayAttackMontage();
+
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && AttackMontage)
+	{
+		AnimInstance->Montage_Play(AttackMontage);
+
+		const int32 RandomAttackIndex = FMath::RandRange(1,3);
+		FName SectionName = FName(*FString::Printf(TEXT("Attack%d"), RandomAttackIndex));
+		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
+	}
+}
+
 void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 {
 	// DRAW_SPHERE_COLOR(ImpactPoint, FColor::Emerald);
@@ -109,14 +132,14 @@ void AEnemy::CheckCombatTarget()
 		if (HealthBarComponent)
 			HealthBarComponent->SetVisibility(false);
 		EnemyState = EEnemyState::EES_Patrolling;
-		GetCharacterMovement()->MaxWalkSpeed = 30.f;
+		GetCharacterMovement()->MaxWalkSpeed = PatrolWalkSpeed;
 		MoveToTarget(PatrolTarget);
 		UE_LOG(LogTemp, Warning, TEXT("back to patrol target, lose interest!"));
 	}
 	else if (!InTargetRange(CombatTarget, AttackRadius) && EnemyState != EEnemyState::EES_Chasing)
 	{
 		EnemyState = EEnemyState::EES_Chasing;
-		GetCharacterMovement()->MaxWalkSpeed = 300.f;
+		GetCharacterMovement()->MaxWalkSpeed = ChasingSpeed;
 		MoveToTarget(CombatTarget);
 		UE_LOG(LogTemp, Warning, TEXT("chasing target!"));
 	}
@@ -124,6 +147,7 @@ void AEnemy::CheckCombatTarget()
 	{
 		EnemyState = EEnemyState::EES_Attacking;
 		//TODO: play attack montage
+		Attack();
 		UE_LOG(LogTemp, Warning, TEXT("Attack!"));
 	}
 }
@@ -168,7 +192,7 @@ void AEnemy::PawnSeen(APawn* SeenPawn)
 	{
 		EnemyState = EEnemyState::EES_Chasing;
 		GetWorldTimerManager().ClearTimer(PatrolTimer);
-		GetCharacterMovement()->MaxWalkSpeed = 300.f;
+		GetCharacterMovement()->MaxWalkSpeed = ChasingSpeed;
 		CombatTarget = SeenPawn;
 		MoveToTarget(CombatTarget);
 		UE_LOG(LogTemp, Warning, TEXT("see the character, chasing!"));
@@ -203,7 +227,7 @@ float AEnemy::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEv
 	}
 	CombatTarget = EventInstigator->GetPawn();
 	EnemyState = EEnemyState::EES_Chasing;
-	GetCharacterMovement()->MaxWalkSpeed = 300.f;
+	GetCharacterMovement()->MaxWalkSpeed = ChasingSpeed;
 	MoveToTarget(CombatTarget);
 	return DamageAmount;
 }

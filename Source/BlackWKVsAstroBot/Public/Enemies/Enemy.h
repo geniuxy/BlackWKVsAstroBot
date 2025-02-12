@@ -46,6 +46,12 @@ public:
 	UPROPERTY(EditAnywhere, Category="AI Navigation")
 	double PatrolRadius = 200.f;
 
+	UPROPERTY(EditAnywhere, Category="AI Navigation")
+	float PatrolWalkSpeed = 30.f;
+
+	UPROPERTY(EditAnywhere, Category="AI Navigation")
+	float ChasingSpeed = 300.f;
+
 	FTimerHandle PatrolTimer;
 	void PatrolTimerFinished();
 
@@ -60,6 +66,10 @@ public:
 protected:
 	UFUNCTION()
 	virtual void BeginPlay() override;
+
+	virtual void Attack() override;
+
+	virtual void PlayAttackMontage() override;
 
 	virtual void Die() override;
 
