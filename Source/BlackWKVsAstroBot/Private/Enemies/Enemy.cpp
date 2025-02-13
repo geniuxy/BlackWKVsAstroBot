@@ -10,6 +10,7 @@
 #include "Perception/PawnSensingComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "HUD/HealthBarComponent.h"
+#include "Item/Weapons/Weapon.h"
 #include "Kismet/GameplayStatics.h"
 #include "Navigation/PathFollowingComponent.h"
 #include "Runtime/AIModule/Classes/AIController.h"
@@ -50,6 +51,14 @@ void AEnemy::BeginPlay()
 
 	if (PawnSensingComponent)
 		PawnSensingComponent->OnSeePawn.AddDynamic(this, &AEnemy::PawnSeen);
+
+	UWorld* World = GetWorld();
+	if (World && WeaponClass)
+	{
+		AWeapon* SpawnWeapon = World->SpawnActor<AWeapon>(WeaponClass);
+		SpawnWeapon->Equip(GetMesh(), FName("RightHandSocket"), this, this);
+		EquippedWeapon = SpawnWeapon;
+	}
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -122,6 +131,14 @@ void AEnemy::Die()
 		HealthBarComponent->SetVisibility(false);
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	SetLifeSpan(5.f);
+}
+
+void AEnemy::Destroyed()
+{
+	Super::Destroyed();
+
+	if (EquippedWeapon)
+		EquippedWeapon->Destroy();
 }
 
 void AEnemy::CheckCombatTarget()

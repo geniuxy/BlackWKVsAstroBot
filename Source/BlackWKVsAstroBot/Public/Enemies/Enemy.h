@@ -31,6 +31,8 @@ public:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent,
 	                         class AController* EventInstigator, AActor* DamageCauser) override;
 
+	virtual void Destroyed() override;
+
 	/**
 	 *  Patrol
 	 */
@@ -95,6 +97,9 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	double AttackRadius = 150.f;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AWeapon> WeaponClass;
 
 private:
 	UPROPERTY(EditAnywhere)
