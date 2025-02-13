@@ -36,6 +36,8 @@ protected:
 
 	virtual void Die();
 
+	virtual void HandleDamage(float DamageAmount);
+
 	/**
 	 * Hit
 	 */

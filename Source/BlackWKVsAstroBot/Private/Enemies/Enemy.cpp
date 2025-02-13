@@ -64,7 +64,7 @@ void AEnemy::BeginPlay()
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	if (EnemyState == EEnemyState::EES_Dead) return;
 	if (EnemyState > EEnemyState::EES_Patrolling)
 		CheckCombatTarget();
 	else
@@ -93,7 +93,7 @@ void AEnemy::PlayAttackMontage()
 	{
 		AnimInstance->Montage_Play(AttackMontage);
 
-		const int32 RandomAttackIndex = FMath::RandRange(1,3);
+		const int32 RandomAttackIndex = FMath::RandRange(1, 3);
 		FName SectionName = FName(*FString::Printf(TEXT("Attack%d"), RandomAttackIndex));
 		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
 	}
@@ -133,6 +133,14 @@ void AEnemy::Die()
 	SetLifeSpan(5.f);
 }
 
+void AEnemy::HandleDamage(float DamageAmount)
+{
+	Super::HandleDamage(DamageAmount);
+
+	if (HealthBarComponent)
+		HealthBarComponent->SetHealthPercent(Attributes->GetHealthPercent());
+}
+
 void AEnemy::Destroyed()
 {
 	Super::Destroyed();
@@ -141,30 +149,78 @@ void AEnemy::Destroyed()
 		EquippedWeapon->Destroy();
 }
 
+void AEnemy::LoseInterest()
+{
+	CombatTarget = nullptr;
+	if (HealthBarComponent)
+		HealthBarComponent->SetVisibility(false);
+}
+
+void AEnemy::StartPatrol()
+{
+	EnemyState = EEnemyState::EES_Patrolling;
+	GetCharacterMovement()->MaxWalkSpeed = PatrolWalkSpeed;
+	MoveToTarget(PatrolTarget);
+}
+
+void AEnemy::StartChase()
+{
+	EnemyState = EEnemyState::EES_Chasing;
+	GetCharacterMovement()->MaxWalkSpeed = ChasingSpeed;
+	MoveToTarget(CombatTarget);
+}
+
+void AEnemy::StartAttack()
+{
+	EnemyState = EEnemyState::EES_Attacking;
+	const float AttackWaitTime = FMath::RandRange(AttackWaitMin, AttackWaitMax);
+	GetWorldTimerManager().SetTimer(AttackTimer, this, &AEnemy::Attack, AttackWaitTime);
+}
+
+bool AEnemy::CanPatrol()
+{
+	return !InTargetRange(CombatTarget, CombatRadius) && EnemyState != EEnemyState::EES_Dead;
+}
+
+bool AEnemy::CanAttack()
+{
+	bool bCanAttack =
+		InTargetRange(CombatTarget, AttackRadius) &&
+		EnemyState != EEnemyState::EES_Attacking &&
+		EnemyState != EEnemyState::EES_Dead;
+	return bCanAttack;
+}
+
+bool AEnemy::CanChase()
+{
+	bool bCanChase =
+		!InTargetRange(CombatTarget, AttackRadius) &&
+		EnemyState != EEnemyState::EES_Chasing &&
+		EnemyState != EEnemyState::EES_Dead;
+	return bCanChase;
+}
+
 void AEnemy::CheckCombatTarget()
 {
-	if (!InTargetRange(CombatTarget, CombatRadius))
+	if (CanPatrol())
 	{
-		CombatTarget = nullptr;
-		if (HealthBarComponent)
-			HealthBarComponent->SetVisibility(false);
-		EnemyState = EEnemyState::EES_Patrolling;
-		GetCharacterMovement()->MaxWalkSpeed = PatrolWalkSpeed;
-		MoveToTarget(PatrolTarget);
+		GetWorldTimerManager().ClearTimer(AttackTimer);
+		LoseInterest();
+		if (EnemyState != EEnemyState::EES_Engaged)
+			StartPatrol();
 		UE_LOG(LogTemp, Warning, TEXT("back to patrol target, lose interest!"));
 	}
-	else if (!InTargetRange(CombatTarget, AttackRadius) && EnemyState != EEnemyState::EES_Chasing)
+	else if (CanChase())
 	{
-		EnemyState = EEnemyState::EES_Chasing;
-		GetCharacterMovement()->MaxWalkSpeed = ChasingSpeed;
-		MoveToTarget(CombatTarget);
+		GetWorldTimerManager().ClearTimer(AttackTimer);
+		if (EnemyState != EEnemyState::EES_Engaged)
+			StartChase();
 		UE_LOG(LogTemp, Warning, TEXT("chasing target!"));
 	}
-	else if (InTargetRange(CombatTarget, AttackRadius) && EnemyState != EEnemyState::EES_Attacking)
+	else if (CanAttack())
 	{
-		EnemyState = EEnemyState::EES_Attacking;
-		//TODO: play attack montage
-		Attack();
+		GetWorldTimerManager().ClearTimer(AttackTimer);
+		StartAttack();
 		UE_LOG(LogTemp, Warning, TEXT("Attack!"));
 	}
 }
@@ -207,11 +263,9 @@ void AEnemy::PawnSeen(APawn* SeenPawn)
 	if (EnemyState != EEnemyState::EES_Patrolling) return;
 	if (SeenPawn->ActorHasTag(FName("Hero")))
 	{
-		EnemyState = EEnemyState::EES_Chasing;
-		GetWorldTimerManager().ClearTimer(PatrolTimer);
-		GetCharacterMovement()->MaxWalkSpeed = ChasingSpeed;
 		CombatTarget = SeenPawn;
-		MoveToTarget(CombatTarget);
+		GetWorldTimerManager().ClearTimer(PatrolTimer);
+		StartChase();
 		UE_LOG(LogTemp, Warning, TEXT("see the character, chasing!"));
 	}
 }
@@ -237,14 +291,8 @@ void AEnemy::MoveToTarget(AActor* Target)
 float AEnemy::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator,
                          AActor* DamageCauser)
 {
-	if (Attributes && HealthBarComponent)
-	{
-		Attributes->ReceiveDamage(DamageAmount);
-		HealthBarComponent->SetHealthPercent(Attributes->GetHealthPercent());
-	}
+	HandleDamage(DamageAmount);
 	CombatTarget = EventInstigator->GetPawn();
-	EnemyState = EEnemyState::EES_Chasing;
-	GetCharacterMovement()->MaxWalkSpeed = ChasingSpeed;
-	MoveToTarget(CombatTarget);
+	StartChase();
 	return DamageAmount;
 }

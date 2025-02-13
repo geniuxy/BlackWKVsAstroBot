@@ -62,8 +62,29 @@ public:
 	UPROPERTY(EditAnywhere, Category = "AI Navigation")
 	float PatrolWaitMax = 10.f;
 
-	void CheckCombatTarget();
 	void CheckPatrolTarget();
+
+	/**
+	 * Combat
+	 */
+
+	FTimerHandle AttackTimer;
+
+	UPROPERTY(EditAnywhere, Category=Combat)
+	float AttackWaitMin = 0.5f;
+	UPROPERTY(EditAnywhere, Category=Combat)
+	float AttackWaitMax = 1.f;
+	
+	void CheckCombatTarget();
+
+	/**
+	 * AI Behaviour
+	 */
+	void LoseInterest();
+	void StartPatrol();
+	void StartChase();
+	void StartAttack();
+	bool CanChase();
 
 protected:
 	UFUNCTION()
@@ -74,6 +95,8 @@ protected:
 	virtual void PlayAttackMontage() override;
 
 	virtual void Die() override;
+
+	virtual void HandleDamage(float DamageAmount) override;
 
 	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 
@@ -100,6 +123,9 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AWeapon> WeaponClass;
+
+	virtual bool CanAttack() override;
+	bool CanPatrol();
 
 private:
 	UPROPERTY(EditAnywhere)

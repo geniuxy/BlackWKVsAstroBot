@@ -50,6 +50,12 @@ void ABaseCharacter::Die()
 {
 }
 
+void ABaseCharacter::HandleDamage(float DamageAmount)
+{
+	if (Attributes)
+		Attributes->ReceiveDamage(DamageAmount);
+}
+
 void ABaseCharacter::DirectionalHitReact(const FVector& ImpactPoint)
 {
 	const FVector ImpactLower = FVector(ImpactPoint.X, ImpactPoint.Y, GetActorLocation().Z);
