@@ -28,9 +28,10 @@ protected:
 	virtual void Attack();
 
 	virtual void PlayAttackMontage();
+	virtual void PlayDeathMontage();
 
 	UFUNCTION(BlueprintCallable)
-	virtual void BackToUnoccupiedState();
+	virtual void AttackEnd();
 
 	virtual bool CanAttack();
 

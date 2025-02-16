@@ -62,7 +62,7 @@ protected:
 
 	virtual void PlayAttackMontage() override;
 
-	virtual void BackToUnoccupiedState() override;
+	virtual void AttackEnd() override;
 
 	void PlayEquipMontage(FName SectionName);
 

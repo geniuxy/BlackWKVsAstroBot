@@ -74,7 +74,7 @@ public:
 	float AttackWaitMin = 0.5f;
 	UPROPERTY(EditAnywhere, Category=Combat)
 	float AttackWaitMax = 1.f;
-	
+
 	void CheckCombatTarget();
 
 	/**
@@ -93,10 +93,13 @@ protected:
 	virtual void Attack() override;
 
 	virtual void PlayAttackMontage() override;
-
+	virtual void PlayDeathMontage() override;
+	
 	virtual void Die() override;
 
 	virtual void HandleDamage(float DamageAmount) override;
+
+	virtual void AttackEnd() override;
 
 	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 

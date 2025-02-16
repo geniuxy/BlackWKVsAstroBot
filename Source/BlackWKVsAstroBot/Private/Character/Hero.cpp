@@ -159,8 +159,9 @@ void AHero::PlayAttackMontage()
 	}
 }
 
-void AHero::BackToUnoccupiedState()
+void AHero::AttackEnd()
 {
+	Super::AttackEnd();
 	ActionState = EActionState::EAS_UnOccupied;
 }
 

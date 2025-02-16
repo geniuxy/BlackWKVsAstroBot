@@ -37,7 +37,11 @@ void ABaseCharacter::PlayAttackMontage()
 {
 }
 
-void ABaseCharacter::BackToUnoccupiedState()
+void ABaseCharacter::PlayDeathMontage()
+{
+}
+
+void ABaseCharacter::AttackEnd()
 {
 }
 

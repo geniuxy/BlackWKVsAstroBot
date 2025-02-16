@@ -81,6 +81,8 @@ void AEnemy::Attack()
 {
 	Super::Attack();
 
+	EnemyState = EEnemyState::EES_Engaged;
+
 	PlayAttackMontage();
 }
 
@@ -96,6 +98,21 @@ void AEnemy::PlayAttackMontage()
 		const int32 RandomAttackIndex = FMath::RandRange(1, 3);
 		FName SectionName = FName(*FString::Printf(TEXT("Attack%d"), RandomAttackIndex));
 		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
+	}
+}
+
+void AEnemy::PlayDeathMontage()
+{
+	Super::PlayDeathMontage();
+
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && DeathMontage)
+	{
+		AnimInstance->Montage_Play(DeathMontage);
+		const int32 NumSections = 3; // 动画段的数量，可以动态调整
+		const int32 RandomSectionIndex = FMath::RandRange(1, NumSections);
+		const FString RandomSectionName = FString::Printf(TEXT("Death%d"), RandomSectionIndex);
+		AnimInstance->Montage_JumpToSection(*RandomSectionName, DeathMontage);
 	}
 }
 
@@ -118,19 +135,18 @@ void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 
 void AEnemy::Die()
 {
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	if (AnimInstance && DeathMontage)
-	{
-		AnimInstance->Montage_Play(DeathMontage);
-		const int32 NumSections = 3; // 动画段的数量，可以动态调整
-		const int32 RandomSectionIndex = FMath::RandRange(1, NumSections);
-		const FString RandomSectionName = FString::Printf(TEXT("Death%d"), RandomSectionIndex);
-		AnimInstance->Montage_JumpToSection(*RandomSectionName, DeathMontage);
-	}
+	EnemyState = EEnemyState::EES_Dead;
+
+	PlayDeathMontage();
+
+	GetWorldTimerManager().ClearTimer(AttackTimer);
+
 	if (HealthBarComponent)
 		HealthBarComponent->SetVisibility(false);
+
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	SetLifeSpan(5.f);
+	GetCharacterMovement()->bOrientRotationToMovement = false;
 }
 
 void AEnemy::HandleDamage(float DamageAmount)
@@ -139,6 +155,14 @@ void AEnemy::HandleDamage(float DamageAmount)
 
 	if (HealthBarComponent)
 		HealthBarComponent->SetHealthPercent(Attributes->GetHealthPercent());
+}
+
+void AEnemy::AttackEnd()
+{
+	Super::AttackEnd();
+
+	EnemyState = EEnemyState::EES_NoState;
+	CheckCombatTarget();
 }
 
 void AEnemy::Destroyed()
@@ -187,6 +211,7 @@ bool AEnemy::CanAttack()
 	bool bCanAttack =
 		InTargetRange(CombatTarget, AttackRadius) &&
 		EnemyState != EEnemyState::EES_Attacking &&
+		EnemyState != EEnemyState::EES_Engaged &&
 		EnemyState != EEnemyState::EES_Dead;
 	return bCanAttack;
 }
