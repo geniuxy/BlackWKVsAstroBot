@@ -37,7 +37,11 @@ protected:
 	UFUNCTION()
 	void OnWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	                     int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
+	
+	bool ActorHasSameTag(AActor* OtherActor);
+	void BoxTrace(FHitResult& HitResult);
+	void ExecuteGetHit(FHitResult HitResult);
+	
 	UFUNCTION(BlueprintImplementableEvent)
 	void CreateFieldSystem(const FVector& FieldLocation);
 
@@ -53,6 +57,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
 	float Damage = 20.f;
+
+	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
+	bool bShowTrace = false;
 
 public:
 	FORCEINLINE UBoxComponent* GetWeaponCollision() const { return WeaponCollision; }

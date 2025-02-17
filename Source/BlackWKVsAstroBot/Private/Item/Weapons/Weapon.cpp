@@ -50,6 +50,29 @@ void AWeapon::OnWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
                               UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
                               const FHitResult& SweepResult)
 {
+	if (ActorHasSameTag(OtherActor)) return;
+	
+	FHitResult HitResult;
+	BoxTrace(HitResult);
+
+	if (HitResult.GetActor())
+	{
+		if (ActorHasSameTag(HitResult.GetActor())) return;
+		
+		UGameplayStatics::ApplyDamage(HitResult.GetActor(), Damage, GetInstigator()->GetController(),
+		                              this, UDamageType::StaticClass());
+		ExecuteGetHit(HitResult);
+		CreateFieldSystem(HitResult.ImpactPoint);
+	}
+}
+
+bool AWeapon::ActorHasSameTag(AActor* OtherActor)
+{
+	return GetOwner()->ActorHasTag(TEXT("Enemy")) && OtherActor->ActorHasTag(TEXT("Enemy"));
+}
+
+void AWeapon::BoxTrace(FHitResult& HitResult)
+{
 	const FVector Start = BoxTraceStart->GetComponentLocation();
 	const FVector End = BoxTraceEnd->GetComponentLocation();
 
@@ -59,7 +82,6 @@ void AWeapon::OnWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 	for (AActor* Actor : IgnoreActors)
 		ActorsToIgnore.AddUnique(Actor);
 
-	FHitResult HitResult;
 	UKismetSystemLibrary::BoxTraceSingle(
 		this,
 		Start,
@@ -69,28 +91,18 @@ void AWeapon::OnWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 		TraceTypeQuery1,
 		false,
 		ActorsToIgnore,
-		EDrawDebugTrace::None,
+		bShowTrace ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None,
 		HitResult,
 		true
 	);
+	
+	IgnoreActors.AddUnique(HitResult.GetActor());
+}
 
-	if (HitResult.bBlockingHit && HitResult.GetActor())
-	{
-		UGameplayStatics::ApplyDamage(
-			HitResult.GetActor(),
-			Damage,
-			GetInstigator()->GetController(),
-			this,
-			UDamageType::StaticClass()
-		);
-
-		if (IHitInterface* HitInterface = Cast<IHitInterface>(HitResult.GetActor()))
-			HitInterface->Execute_GetHit(HitResult.GetActor(), HitResult.ImpactPoint);
-
-		IgnoreActors.AddUnique(HitResult.GetActor());
-
-		CreateFieldSystem(HitResult.ImpactPoint);
-	}
+void AWeapon::ExecuteGetHit(FHitResult HitResult)
+{
+	if (IHitInterface* HitInterface = Cast<IHitInterface>(HitResult.GetActor()))
+		HitInterface->Execute_GetHit(HitResult.GetActor(), HitResult.ImpactPoint);
 }
 
 void AWeapon::Equip(USceneComponent* InParent, FName SocketName, AActor* NewOwner, APawn* NewInstigator)

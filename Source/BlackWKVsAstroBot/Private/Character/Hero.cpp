@@ -10,6 +10,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Item/Weapons/Weapon.h"
 #include "Components/BoxComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 AHero::AHero()
 {
@@ -18,6 +19,12 @@ AHero::AHero()
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
+
+	GetMesh()->SetCollisionObjectType(ECC_WorldDynamic);
+	GetMesh()->SetCollisionResponseToAllChannels(ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+	GetMesh()->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Overlap);
+	GetMesh()->SetGenerateOverlapEvents(true);
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 400.f, 0.f);
@@ -47,6 +54,35 @@ void AHero::BeginPlay()
 
 	Tags.Add(FName("Hero"));
 }
+
+void AHero::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+}
+
+void AHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
+	{
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AHero::Move);
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AHero::Look);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AHero::Jump);
+		EnhancedInputComponent->BindAction(EquipAction, ETriggerEvent::Triggered, this, &AHero::Equip);
+		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &AHero::Attack);
+	}
+}
+
+void AHero::GetHit_Implementation(const FVector& ImpactPoint)
+{
+	if (HitSound)
+		UGameplayStatics::PlaySoundAtLocation(this, HitSound, ImpactPoint);
+
+	if (HitParticles)
+		UGameplayStatics::SpawnEmitterAtLocation(this, HitParticles, ImpactPoint);
+}
+
 
 void AHero::Move(const FInputActionValue& Value)
 {
@@ -108,7 +144,7 @@ void AHero::Equip()
 void AHero::Attack()
 {
 	Super::Attack();
-	
+
 	if (CanAttack())
 	{
 		PlayAttackMontage();
@@ -119,7 +155,7 @@ void AHero::Attack()
 void AHero::PlayAttackMontage()
 {
 	Super::PlayAttackMontage();
-	
+
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance && AttackMontage)
 	{
@@ -200,23 +236,4 @@ bool AHero::CanDisArm()
 bool AHero::CanArm()
 {
 	return ActionState == EActionState::EAS_UnOccupied && HeroState == EHeroState::EHS_UnEquipped && EquippedWeapon;
-}
-
-void AHero::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
-
-void AHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
-	{
-		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AHero::Move);
-		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AHero::Look);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AHero::Jump);
-		EnhancedInputComponent->BindAction(EquipAction, ETriggerEvent::Triggered, this, &AHero::Equip);
-		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &AHero::Attack);
-	}
 }

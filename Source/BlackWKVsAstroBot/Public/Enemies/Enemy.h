@@ -90,11 +90,13 @@ protected:
 	UFUNCTION()
 	virtual void BeginPlay() override;
 
+	void InitializeEnemy();
+
 	virtual void Attack() override;
 
 	virtual void PlayAttackMontage() override;
 	virtual void PlayDeathMontage() override;
-	
+
 	virtual void Die() override;
 
 	virtual void HandleDamage(float DamageAmount) override;

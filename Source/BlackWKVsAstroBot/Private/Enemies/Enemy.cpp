@@ -52,13 +52,9 @@ void AEnemy::BeginPlay()
 	if (PawnSensingComponent)
 		PawnSensingComponent->OnSeePawn.AddDynamic(this, &AEnemy::PawnSeen);
 
-	UWorld* World = GetWorld();
-	if (World && WeaponClass)
-	{
-		AWeapon* SpawnWeapon = World->SpawnActor<AWeapon>(WeaponClass);
-		SpawnWeapon->Equip(GetMesh(), FName("RightHandSocket"), this, this);
-		EquippedWeapon = SpawnWeapon;
-	}
+	InitializeEnemy();
+	
+	Tags.Add(FName("Enemy"));
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -76,6 +72,16 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
+void AEnemy::InitializeEnemy()
+{
+	UWorld* World = GetWorld();
+	if (World && WeaponClass)
+	{
+		AWeapon* SpawnWeapon = World->SpawnActor<AWeapon>(WeaponClass);
+		SpawnWeapon->Equip(GetMesh(), FName("RightHandSocket"), this, this);
+		EquippedWeapon = SpawnWeapon;
+	}
+}
 
 void AEnemy::Attack()
 {
@@ -233,20 +239,20 @@ void AEnemy::CheckCombatTarget()
 		LoseInterest();
 		if (EnemyState != EEnemyState::EES_Engaged)
 			StartPatrol();
-		UE_LOG(LogTemp, Warning, TEXT("back to patrol target, lose interest!"));
+		// UE_LOG(LogTemp, Warning, TEXT("back to patrol target, lose interest!"));
 	}
 	else if (CanChase())
 	{
 		GetWorldTimerManager().ClearTimer(AttackTimer);
 		if (EnemyState != EEnemyState::EES_Engaged)
 			StartChase();
-		UE_LOG(LogTemp, Warning, TEXT("chasing target!"));
+		// UE_LOG(LogTemp, Warning, TEXT("chasing target!"));
 	}
 	else if (CanAttack())
 	{
 		GetWorldTimerManager().ClearTimer(AttackTimer);
 		StartAttack();
-		UE_LOG(LogTemp, Warning, TEXT("Attack!"));
+		// UE_LOG(LogTemp, Warning, TEXT("Attack!"));
 	}
 }
 
