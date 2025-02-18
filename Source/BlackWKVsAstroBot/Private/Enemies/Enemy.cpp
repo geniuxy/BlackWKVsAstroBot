@@ -127,16 +127,7 @@ void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 	// DRAW_SPHERE_COLOR(ImpactPoint, FColor::Emerald);
 	if (HealthBarComponent)
 		HealthBarComponent->SetVisibility(true);
-	if (Attributes && Attributes->IsAlive())
-		DirectionalHitReact(ImpactPoint);
-	else
-		Die();
-
-	if (HitSound)
-		UGameplayStatics::PlaySoundAtLocation(this, HitSound, ImpactPoint);
-
-	if (HitParticles)
-		UGameplayStatics::SpawnEmitterAtLocation(this, HitParticles, ImpactPoint);
+	Super::GetHit_Implementation(ImpactPoint);
 }
 
 void AEnemy::Die()

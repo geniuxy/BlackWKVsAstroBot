@@ -6,6 +6,7 @@
 #include "Components/AttributeComponent.h"
 #include "Components/BoxComponent.h"
 #include "Item/Weapons/Weapon.h"
+#include "Kismet/GameplayStatics.h"
 
 ABaseCharacter::ABaseCharacter()
 {
@@ -27,6 +28,20 @@ void ABaseCharacter::Tick(float DeltaTime)
 void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+}
+
+void ABaseCharacter::GetHit_Implementation(const FVector& ImpactPoint)
+{
+	if (Attributes && Attributes->IsAlive())
+		DirectionalHitReact(ImpactPoint);
+	else
+		Die();
+
+	if (HitSound)
+		UGameplayStatics::PlaySoundAtLocation(this, HitSound, ImpactPoint);
+
+	if (HitParticles)
+		UGameplayStatics::SpawnEmitterAtLocation(this, HitParticles, ImpactPoint);
 }
 
 void ABaseCharacter::Attack()

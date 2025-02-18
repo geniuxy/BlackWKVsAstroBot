@@ -76,11 +76,7 @@ void AHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AHero::GetHit_Implementation(const FVector& ImpactPoint)
 {
-	if (HitSound)
-		UGameplayStatics::PlaySoundAtLocation(this, HitSound, ImpactPoint);
-
-	if (HitParticles)
-		UGameplayStatics::SpawnEmitterAtLocation(this, HitParticles, ImpactPoint);
+	Super::GetHit_Implementation(ImpactPoint);
 }
 
 
