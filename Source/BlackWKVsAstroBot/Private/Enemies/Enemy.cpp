@@ -124,10 +124,11 @@ void AEnemy::PlayDeathMontage()
 
 void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 {
-	// DRAW_SPHERE_COLOR(ImpactPoint, FColor::Emerald);
-	if (HealthBarComponent)
-		HealthBarComponent->SetVisibility(true);
 	Super::GetHit_Implementation(ImpactPoint);
+	// DRAW_SPHERE_COLOR(ImpactPoint, FColor::Emerald);
+	if (EnemyState != EEnemyState::EES_Dead && HealthBarComponent)
+		HealthBarComponent->SetVisibility(true);
+	GetWorldTimerManager().ClearTimer(PatrolTimer);
 }
 
 void AEnemy::Die()
@@ -144,6 +145,7 @@ void AEnemy::Die()
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	SetLifeSpan(5.f);
 	GetCharacterMovement()->bOrientRotationToMovement = false;
+	SetWeaponCollision(ECollisionEnabled::NoCollision);
 }
 
 void AEnemy::HandleDamage(float DamageAmount)

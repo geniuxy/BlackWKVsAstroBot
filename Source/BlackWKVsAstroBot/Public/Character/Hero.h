@@ -66,6 +66,12 @@ protected:
 
 	virtual void AttackEnd() override;
 
+	UFUNCTION(BlueprintCallable)
+	void HitReactEnd();
+
+	UFUNCTION(BlueprintCallable)
+	void FinishEquipping();
+
 	void PlayEquipMontage(FName SectionName);
 
 	UFUNCTION(BlueprintCallable)

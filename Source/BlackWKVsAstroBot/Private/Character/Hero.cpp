@@ -77,6 +77,7 @@ void AHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void AHero::GetHit_Implementation(const FVector& ImpactPoint)
 {
 	Super::GetHit_Implementation(ImpactPoint);
+	ActionState = EActionState::EAS_HitReaction;
 }
 
 
@@ -194,6 +195,16 @@ void AHero::PlayAttackMontage()
 void AHero::AttackEnd()
 {
 	Super::AttackEnd();
+	ActionState = EActionState::EAS_UnOccupied;
+}
+
+void AHero::HitReactEnd()
+{
+	ActionState = EActionState::EAS_UnOccupied;
+}
+
+void AHero::FinishEquipping()
+{
 	ActionState = EActionState::EAS_UnOccupied;
 }
 
