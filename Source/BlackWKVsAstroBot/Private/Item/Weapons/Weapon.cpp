@@ -103,7 +103,7 @@ void AWeapon::BoxTrace(FHitResult& HitResult)
 void AWeapon::ExecuteGetHit(FHitResult HitResult)
 {
 	if (IHitInterface* HitInterface = Cast<IHitInterface>(HitResult.GetActor()))
-		HitInterface->Execute_GetHit(HitResult.GetActor(), HitResult.ImpactPoint);
+		HitInterface->Execute_GetHit(HitResult.GetActor(), HitResult.ImpactPoint, GetOwner());
 }
 
 void AWeapon::Equip(USceneComponent* InParent, FName SocketName, AActor* NewOwner, APawn* NewInstigator)

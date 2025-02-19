@@ -22,7 +22,7 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
-	virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
+	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -50,7 +50,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = VisualEffects)
 	UParticleSystem* HitParticles;
 	
-	void DirectionalHitReact(const FVector& ImpactPoint);
+	void DirectionalHitReact(const FVector& HitterPos);
 
 	/**
 	 * Weapon

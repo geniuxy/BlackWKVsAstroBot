@@ -74,9 +74,10 @@ void AHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	}
 }
 
-void AHero::GetHit_Implementation(const FVector& ImpactPoint)
+void AHero::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
 {
-	Super::GetHit_Implementation(ImpactPoint);
+	Super::GetHit_Implementation(ImpactPoint, Hitter);
+	SetWeaponCollision(ECollisionEnabled::NoCollision);
 	ActionState = EActionState::EAS_HitReaction;
 }
 

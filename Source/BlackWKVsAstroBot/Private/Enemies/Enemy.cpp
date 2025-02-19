@@ -122,9 +122,9 @@ void AEnemy::PlayDeathMontage()
 	}
 }
 
-void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
+void AEnemy::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
 {
-	Super::GetHit_Implementation(ImpactPoint);
+	Super::GetHit_Implementation(ImpactPoint, Hitter);
 	// DRAW_SPHERE_COLOR(ImpactPoint, FColor::Emerald);
 	if (EnemyState != EEnemyState::EES_Dead && HealthBarComponent)
 		HealthBarComponent->SetVisibility(true);

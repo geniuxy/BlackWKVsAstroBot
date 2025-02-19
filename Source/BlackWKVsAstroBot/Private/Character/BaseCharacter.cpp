@@ -30,10 +30,10 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
-void ABaseCharacter::GetHit_Implementation(const FVector& ImpactPoint)
+void ABaseCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
 {
-	if (Attributes && Attributes->IsAlive())
-		DirectionalHitReact(ImpactPoint);
+	if (Attributes && Attributes->IsAlive() && Hitter)
+		DirectionalHitReact(Hitter->GetActorLocation());
 	else
 		Die();
 
@@ -75,9 +75,9 @@ void ABaseCharacter::HandleDamage(float DamageAmount)
 		Attributes->ReceiveDamage(DamageAmount);
 }
 
-void ABaseCharacter::DirectionalHitReact(const FVector& ImpactPoint)
+void ABaseCharacter::DirectionalHitReact(const FVector& HitterPos)
 {
-	const FVector ImpactLower = FVector(ImpactPoint.X, ImpactPoint.Y, GetActorLocation().Z);
+	const FVector ImpactLower = FVector(HitterPos.X, HitterPos.Y, GetActorLocation().Z);
 	const FVector ToHit = (ImpactLower - GetActorLocation()).GetSafeNormal();
 	const FVector Forward = GetActorForwardVector();
 
