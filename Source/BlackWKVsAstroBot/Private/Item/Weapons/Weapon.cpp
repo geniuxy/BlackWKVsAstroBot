@@ -68,7 +68,8 @@ void AWeapon::OnWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 
 bool AWeapon::ActorHasSameTag(AActor* OtherActor)
 {
-	return GetOwner()->ActorHasTag(TEXT("Enemy")) && OtherActor->ActorHasTag(TEXT("Enemy"));
+	return GetOwner()->ActorHasTag(TEXT("Enemy")) && OtherActor->ActorHasTag(TEXT("Enemy")) || 
+		GetOwner()->ActorHasTag(TEXT("Hero")) && OtherActor->ActorHasTag(TEXT("Hero"));
 }
 
 void AWeapon::BoxTrace(FHitResult& HitResult)
