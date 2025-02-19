@@ -53,7 +53,7 @@ void AEnemy::BeginPlay()
 		PawnSensingComponent->OnSeePawn.AddDynamic(this, &AEnemy::PawnSeen);
 
 	InitializeEnemy();
-	
+
 	Tags.Add(FName("Enemy"));
 }
 
@@ -129,6 +129,10 @@ void AEnemy::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
 	if (EnemyState != EEnemyState::EES_Dead && HealthBarComponent)
 		HealthBarComponent->SetVisibility(true);
 	GetWorldTimerManager().ClearTimer(PatrolTimer);
+	GetWorldTimerManager().ClearTimer(AttackTimer);
+	SetWeaponCollision(ECollisionEnabled::NoCollision);
+
+	StopAttackMontage();
 }
 
 void AEnemy::Die()
@@ -317,6 +321,11 @@ float AEnemy::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEv
 {
 	HandleDamage(DamageAmount);
 	CombatTarget = EventInstigator->GetPawn();
-	StartChase();
+
+	if (InTargetRange(CombatTarget, AttackRadius))
+		EnemyState = EEnemyState::EES_Attacking;
+	else
+		StartChase();
+	
 	return DamageAmount;
 }

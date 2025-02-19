@@ -30,6 +30,7 @@ protected:
 	virtual void Attack();
 
 	virtual void PlayAttackMontage();
+	void StopAttackMontage();
 	virtual void PlayDeathMontage();
 
 	UFUNCTION(BlueprintCallable)

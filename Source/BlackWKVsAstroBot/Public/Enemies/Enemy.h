@@ -117,9 +117,9 @@ protected:
 	/**
 	 * Combat
 	 */
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly, Category=Combat)
 	AActor* CombatTarget;
-
+	
 	UPROPERTY(EditAnywhere)
 	double CombatRadius = 500.f;
 
