@@ -63,6 +63,27 @@ void ABaseCharacter::PlayDeathMontage()
 {
 }
 
+FVector ABaseCharacter::GetMotionWarpTranslation()
+{
+	if (CombatTarget)
+	{
+		const FVector CombatTargetLocation = CombatTarget->GetActorLocation();
+		const FVector Location = GetActorLocation();
+		const FVector TargetToMe = (CombatTargetLocation - Location).GetSafeNormal();
+		return TargetToMe * WarpTargetDistance + CombatTargetLocation;
+	}
+	return FVector();
+}
+
+FVector ABaseCharacter::GetMotionWarpRotation()
+{
+	if (CombatTarget)
+	{
+		return CombatTarget->GetActorLocation();
+	}
+	return FVector();
+}
+
 void ABaseCharacter::AttackEnd()
 {
 }

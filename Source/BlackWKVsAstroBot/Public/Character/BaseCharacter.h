@@ -21,7 +21,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	
+
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 
 protected:
@@ -29,9 +29,17 @@ protected:
 
 	virtual void Attack();
 
-	virtual void PlayAttackMontage();
-	void StopAttackMontage();
-	virtual void PlayDeathMontage();
+	UFUNCTION(BlueprintCallable)
+	FVector GetMotionWarpTranslation();
+
+	UFUNCTION(BlueprintCallable)
+	FVector GetMotionWarpRotation();
+
+	UPROPERTY(EditAnywhere, Category = Combat)
+	double WarpTargetDistance = 75.f;
+	
+	UPROPERTY(BlueprintReadOnly, Category = Combat)
+	AActor* CombatTarget;
 
 	UFUNCTION(BlueprintCallable)
 	virtual void AttackEnd();
@@ -50,7 +58,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = VisualEffects)
 	UParticleSystem* HitParticles;
-	
+
 	void DirectionalHitReact(const FVector& HitterPos);
 
 	/**
@@ -58,7 +66,7 @@ protected:
 	 */
 	UPROPERTY(VisibleInstanceOnly, Category = Weapon)
 	AWeapon* EquippedWeapon;
-	
+
 	UFUNCTION(BlueprintCallable)
 	void SetWeaponCollision(ECollisionEnabled::Type CollisionType);
 
@@ -84,6 +92,11 @@ protected:
 	 * Montage functions
 	 */
 	virtual void PlayHitReactLargeMontage(FName HitFromSection);
+	virtual void PlayAttackMontage();
+	void StopAttackMontage();
+	virtual void PlayDeathMontage();
+
+private:
 
 public:
 };
