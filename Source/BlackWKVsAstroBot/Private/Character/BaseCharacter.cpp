@@ -3,6 +3,7 @@
 
 #include "Character/BaseCharacter.h"
 
+#include "BlackWKVsAstroBot/DebugMacros.h"
 #include "Components/AttributeComponent.h"
 #include "Components/BoxComponent.h"
 #include "Item/Weapons/Weapon.h"
@@ -69,7 +70,8 @@ FVector ABaseCharacter::GetMotionWarpTranslation()
 	{
 		const FVector CombatTargetLocation = CombatTarget->GetActorLocation();
 		const FVector Location = GetActorLocation();
-		const FVector TargetToMe = (CombatTargetLocation - Location).GetSafeNormal();
+		const FVector TargetToMe = (Location - CombatTargetLocation).GetSafeNormal();
+		DRAW_SPHERE(TargetToMe * WarpTargetDistance + CombatTargetLocation);
 		return TargetToMe * WarpTargetDistance + CombatTargetLocation;
 	}
 	return FVector();
