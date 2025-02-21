@@ -71,7 +71,7 @@ FVector ABaseCharacter::GetMotionWarpTranslation()
 		const FVector CombatTargetLocation = CombatTarget->GetActorLocation();
 		const FVector Location = GetActorLocation();
 		const FVector TargetToMe = (Location - CombatTargetLocation).GetSafeNormal();
-		DRAW_SPHERE(TargetToMe * WarpTargetDistance + CombatTargetLocation);
+		// DRAW_SPHERE(TargetToMe * WarpTargetDistance + CombatTargetLocation);
 		return TargetToMe * WarpTargetDistance + CombatTargetLocation;
 	}
 	return FVector();
