@@ -6,6 +6,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Camera/CameraComponent.h"
+#include "Components/AttributeComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Item/Weapons/Weapon.h"
@@ -46,9 +47,9 @@ void AHero::BeginPlay()
 	Super::BeginPlay();
 
 	InitializeEnhancedInput();
-	
+
 	InitializeHeroOverlay();
-	
+
 	Tags.Add(FName("Hero"));
 }
 
@@ -72,9 +73,10 @@ void AHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 }
 
 float AHero::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator,
-	AActor* DamageCauser)
+                        AActor* DamageCauser)
 {
 	HandleDamage(DamageAmount);
+	UpdateHealthBar();
 	return DamageAmount;
 }
 
@@ -114,6 +116,12 @@ void AHero::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisValue.X);
 		AddControllerPitchInput(LookAxisValue.Y);
 	}
+}
+
+void AHero::Jump()
+{
+	if (ActionState != EActionState::EAS_UnOccupied) return;
+	Super::Jump();
 }
 
 void AHero::Equip()
@@ -279,4 +287,10 @@ void AHero::InitializeHeroOverlay()
 			}
 		}
 	}
+}
+
+void AHero::UpdateHealthBar()
+{
+	if (HeroOverlay && Attributes)
+		HeroOverlay->SetHealthBarPercent(Attributes->GetHealthPercent());
 }

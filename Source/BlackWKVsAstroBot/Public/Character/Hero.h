@@ -28,16 +28,18 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual void Jump() override;
+
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent,
 	                         class AController* EventInstigator, AActor* DamageCauser) override;
 
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 
-	void InitializeEnhancedInput();
-	void InitializeHeroOverlay();
-
 protected:
 	virtual void BeginPlay() override;
+
+	void InitializeEnhancedInput();
+	void InitializeHeroOverlay();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input)
 	UInputMappingContext* MappingContext;
@@ -74,6 +76,8 @@ protected:
 
 	virtual void PlayAttackMontage() override;
 
+	void PlayEquipMontage(FName SectionName);
+
 	virtual void AttackEnd() override;
 
 	UFUNCTION(BlueprintCallable)
@@ -82,13 +86,13 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void FinishEquipping();
 
-	void PlayEquipMontage(FName SectionName);
-
 	UFUNCTION(BlueprintCallable)
 	void DisArm();
 
 	UFUNCTION(BlueprintCallable)
 	void Arm();
+
+	void UpdateHealthBar();
 
 private:
 	EHeroState HeroState = EHeroState::EHS_UnEquipped;
