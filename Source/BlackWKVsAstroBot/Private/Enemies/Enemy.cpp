@@ -86,7 +86,11 @@ void AEnemy::InitializeEnemy()
 void AEnemy::Attack()
 {
 	Super::Attack();
-
+	
+	if (CombatTarget && CombatTarget->ActorHasTag(FName("Dead")))
+		CombatTarget = nullptr;
+	if (CombatTarget == nullptr) return;
+	
 	EnemyState = EEnemyState::EES_Engaged;
 
 	PlayAttackMontage();
