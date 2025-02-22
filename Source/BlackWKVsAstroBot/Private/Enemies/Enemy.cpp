@@ -107,21 +107,6 @@ void AEnemy::PlayAttackMontage()
 	}
 }
 
-void AEnemy::PlayDeathMontage()
-{
-	Super::PlayDeathMontage();
-
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	if (AnimInstance && DeathMontage)
-	{
-		AnimInstance->Montage_Play(DeathMontage);
-		const int32 NumSections = 3; // 动画段的数量，可以动态调整
-		const int32 RandomSectionIndex = FMath::RandRange(1, NumSections);
-		const FString RandomSectionName = FString::Printf(TEXT("Death%d"), RandomSectionIndex);
-		AnimInstance->Montage_JumpToSection(*RandomSectionName, DeathMontage);
-	}
-}
-
 void AEnemy::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
 {
 	Super::GetHit_Implementation(ImpactPoint, Hitter);
@@ -137,9 +122,9 @@ void AEnemy::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
 
 void AEnemy::Die()
 {
+	Super::Die();
+	
 	EnemyState = EEnemyState::EES_Dead;
-
-	PlayDeathMontage();
 
 	GetWorldTimerManager().ClearTimer(AttackTimer);
 

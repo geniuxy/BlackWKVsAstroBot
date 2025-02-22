@@ -84,7 +84,8 @@ void AHero::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
 {
 	Super::GetHit_Implementation(ImpactPoint, Hitter);
 	SetWeaponCollision(ECollisionEnabled::NoCollision);
-	ActionState = EActionState::EAS_HitReaction;
+	if (Attributes && Attributes->IsAlive())
+		ActionState = EActionState::EAS_HitReaction;
 }
 
 
@@ -293,4 +294,13 @@ void AHero::UpdateHealthBar()
 {
 	if (HeroOverlay && Attributes)
 		HeroOverlay->SetHealthBarPercent(Attributes->GetHealthPercent());
+}
+
+void AHero::Die()
+{
+	Super::Die();
+
+	ActionState = EActionState::EAS_Dead;
+	
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }

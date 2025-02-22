@@ -93,6 +93,8 @@ protected:
 	void Arm();
 
 	void UpdateHealthBar();
+	
+	virtual void Die() override;
 
 private:
 	EHeroState HeroState = EHeroState::EHS_UnEquipped;

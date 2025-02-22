@@ -95,7 +95,6 @@ protected:
 	virtual void Attack() override;
 
 	virtual void PlayAttackMontage() override;
-	virtual void PlayDeathMontage() override;
 
 	virtual void Die() override;
 

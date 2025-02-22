@@ -62,6 +62,15 @@ void ABaseCharacter::StopAttackMontage()
 
 void ABaseCharacter::PlayDeathMontage()
 {
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && DeathMontage)
+	{
+		AnimInstance->Montage_Play(DeathMontage);
+		const int32 NumSections = 3; // 动画段的数量，可以动态调整
+		const int32 RandomSectionIndex = FMath::RandRange(1, NumSections);
+		const FString RandomSectionName = FString::Printf(TEXT("Death%d"), RandomSectionIndex);
+		AnimInstance->Montage_JumpToSection(*RandomSectionName, DeathMontage);
+	}
 }
 
 FVector ABaseCharacter::GetMotionWarpTranslation()
@@ -97,6 +106,7 @@ bool ABaseCharacter::CanAttack()
 
 void ABaseCharacter::Die()
 {
+	PlayDeathMontage();
 }
 
 void ABaseCharacter::HandleDamage(float DamageAmount)
