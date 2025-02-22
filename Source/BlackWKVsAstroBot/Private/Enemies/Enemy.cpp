@@ -240,6 +240,8 @@ void AEnemy::CheckCombatTarget()
 		StartAttack();
 		// UE_LOG(LogTemp, Warning, TEXT("Attack!"));
 	}
+	else if (CombatTarget && CombatTarget->ActorHasTag(FName("Dead")))
+		StartPatrol();
 }
 
 void AEnemy::CheckPatrolTarget()
@@ -278,7 +280,7 @@ AActor* AEnemy::ChoosingNextPatrolTarget()
 void AEnemy::PawnSeen(APawn* SeenPawn)
 {
 	if (EnemyState != EEnemyState::EES_Patrolling) return;
-	if (SeenPawn->ActorHasTag(FName("Hero")))
+	if (SeenPawn->ActorHasTag(FName("Hero")) && !SeenPawn->ActorHasTag(FName("Dead")))
 	{
 		CombatTarget = SeenPawn;
 		GetWorldTimerManager().ClearTimer(PatrolTimer);
