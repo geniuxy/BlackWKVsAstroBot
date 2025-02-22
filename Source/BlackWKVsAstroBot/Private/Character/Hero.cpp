@@ -10,6 +10,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Item/Weapons/Weapon.h"
 #include "Components/BoxComponent.h"
+#include "HUD/HeroHUD.h"
+#include "HUD/HeroOverlay.h"
 #include "Kismet/GameplayStatics.h"
 
 AHero::AHero()
@@ -43,15 +45,10 @@ void AHero::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
-	{
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem =
-			ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
-		{
-			Subsystem->AddMappingContext(MappingContext, 0);
-		}
-	}
-
+	InitializeEnhancedInput();
+	
+	InitializeHeroOverlay();
+	
 	Tags.Add(FName("Hero"));
 }
 
@@ -251,4 +248,35 @@ bool AHero::CanDisArm()
 bool AHero::CanArm()
 {
 	return ActionState == EActionState::EAS_UnOccupied && HeroState == EHeroState::EHS_UnEquipped && EquippedWeapon;
+}
+
+void AHero::InitializeEnhancedInput()
+{
+	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem =
+			ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			Subsystem->AddMappingContext(MappingContext, 0);
+		}
+	}
+}
+
+void AHero::InitializeHeroOverlay()
+{
+	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
+	{
+		AHeroHUD* HeroHUD = Cast<AHeroHUD>(PlayerController->GetHUD());
+		if (HeroHUD)
+		{
+			HeroOverlay = HeroHUD->GetHeroOverlay();
+			if (HeroOverlay)
+			{
+				HeroOverlay->SetHealthBarPercent(0.8f);
+				HeroOverlay->SetStaminaBarPercent(1.f);
+				HeroOverlay->SetCoinText(0);
+				HeroOverlay->SetSoulText(0);
+			}
+		}
+	}
 }

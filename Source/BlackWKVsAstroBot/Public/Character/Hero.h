@@ -7,6 +7,7 @@
 #include "HeroTypes.h"
 #include "Hero.generated.h"
 
+class UHeroOverlay;
 class AWeapon;
 class AItem;
 class USpringArmComponent;
@@ -32,11 +33,17 @@ public:
 
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 
+	void InitializeEnhancedInput();
+	void InitializeHeroOverlay();
+
 protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input)
 	UInputMappingContext* MappingContext;
+
+	UPROPERTY()
+	UHeroOverlay* HeroOverlay;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input)
 	UInputAction* MoveAction;

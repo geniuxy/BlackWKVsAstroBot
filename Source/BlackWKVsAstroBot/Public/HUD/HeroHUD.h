@@ -26,5 +26,7 @@ private:
 
 	UPROPERTY()
 	UHeroOverlay* HeroOverlay;
-	
+
+public:
+	FORCEINLINE UHeroOverlay* GetHeroOverlay() const { return HeroOverlay; }
 };
