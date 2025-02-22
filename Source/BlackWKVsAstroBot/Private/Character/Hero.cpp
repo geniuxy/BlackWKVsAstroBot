@@ -272,7 +272,7 @@ void AHero::InitializeHeroOverlay()
 			HeroOverlay = HeroHUD->GetHeroOverlay();
 			if (HeroOverlay)
 			{
-				HeroOverlay->SetHealthBarPercent(0.8f);
+				HeroOverlay->SetHealthBarPercent(1.f);
 				HeroOverlay->SetStaminaBarPercent(1.f);
 				HeroOverlay->SetCoinText(0);
 				HeroOverlay->SetSoulText(0);
