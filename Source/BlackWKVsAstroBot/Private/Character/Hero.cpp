@@ -13,6 +13,8 @@
 #include "Components/BoxComponent.h"
 #include "HUD/HeroHUD.h"
 #include "HUD/HeroOverlay.h"
+#include "Item/Soul.h"
+#include "Item/Treasure.h"
 #include "Kismet/GameplayStatics.h"
 
 AHero::AHero()
@@ -93,11 +95,23 @@ void AHero::SetOverlappingItem(AItem* Item)
 	OverlappingItem = Item;
 }
 
-void AHero::AddSouls(ASoul* Soul)
+void AHero::AddGolds(ATreasure* Treasure)
 {
-	UE_LOG(LogTemp, Warning, TEXT("ASlashCharacter::AddSouls"));
+	if (Attributes)
+	{
+		Attributes->AddCurrentGolds(Treasure->GetValueOfGold());
+		HeroOverlay->SetCoinText(Attributes->GetCurrentCoin());
+	}
 }
 
+void AHero::AddSouls(ASoul* Soul)
+{
+	if (Attributes)
+	{
+		Attributes->AddCurrentSouls(Soul->GetValueOfSoul());
+		HeroOverlay->SetSoulText(Attributes->GetCurrentSoul());
+	}
+}
 
 void AHero::Move(const FInputActionValue& Value)
 {

@@ -35,3 +35,13 @@ void UAttributeComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
+
+void UAttributeComponent::AddCurrentSouls(int32 ValueOfSoul)
+{
+	CurrentSoul += ValueOfSoul;
+}
+
+void UAttributeComponent::AddCurrentGolds(int32 ValueOfGold)
+{
+	CurrentCoin += ValueOfGold;
+}

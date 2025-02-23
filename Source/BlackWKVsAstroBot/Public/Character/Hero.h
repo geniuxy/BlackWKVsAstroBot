@@ -6,6 +6,7 @@
 #include "BaseCharacter.h"
 #include "HeroTypes.h"
 #include "Interfaces/PickupInterface.h"
+#include "Item/Treasure.h"
 #include "Hero.generated.h"
 
 class UHeroOverlay;
@@ -38,6 +39,8 @@ public:
 
 	virtual void SetOverlappingItem(AItem* Item) override;
 
+	virtual void AddGolds(ATreasure* Treasure) override;
+	
 	virtual void AddSouls(ASoul* Soul) override;
 
 protected:
