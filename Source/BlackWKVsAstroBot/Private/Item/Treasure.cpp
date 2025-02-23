@@ -13,9 +13,7 @@ void ATreasure::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor
 	AHero* Hero = Cast<AHero>(OtherActor);
 	if (Hero)
 	{
-		if (PickupSound)
-			UGameplayStatics::PlaySoundAtLocation(this, PickupSound, GetActorLocation());
-
+		SpawnPickUpSound();
 		Destroy();
 	}
 }

@@ -12,5 +12,8 @@ void ASoul::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 	if (PickupInterface)
 		PickupInterface->AddSouls(this);
 
+	SpawnPickUpSound();
+	SpawnPickUpEffect();
+
 	Destroy();
 }

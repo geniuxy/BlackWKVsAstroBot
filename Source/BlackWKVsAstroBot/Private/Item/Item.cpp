@@ -6,6 +6,8 @@
 #include "Character/Hero.h"
 #include "Components/SphereComponent.h"
 #include "NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AItem::AItem()
@@ -42,6 +44,18 @@ float AItem::TransformedSin()
 float AItem::TransformedCos()
 {
 	return Amplitude * FMath::Cos(RunningTime * TimeConstant);
+}
+
+void AItem::SpawnPickUpSound()
+{
+	if (PickupSound)
+		UGameplayStatics::PlaySoundAtLocation(this, PickupSound, GetActorLocation());
+}
+
+void AItem::SpawnPickUpEffect()
+{
+	if (PickupEffect)
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, PickupEffect, GetActorLocation());
 }
 
 void AItem::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,

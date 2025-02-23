@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Item.generated.h"
 
+class UNiagaraSystem;
 class USphereComponent;
 class UNiagaraComponent;
 
@@ -46,6 +47,10 @@ protected:
 	template <typename T>
 	T Avg(T First, T Second);
 
+	void SpawnPickUpSound();
+
+	void SpawnPickUpEffect();
+
 	UFUNCTION()
 	virtual void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	                             UPrimitiveComponent* OtherComp, int OtherBodyIndex, bool bFromSweep,
@@ -65,6 +70,12 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	UNiagaraComponent* EmbersEffect;
+
+	UPROPERTY(EditAnywhere, Category = Sound)
+	USoundBase* PickupSound;
+
+	UPROPERTY(EditAnywhere)
+	UNiagaraSystem* PickupEffect;
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
