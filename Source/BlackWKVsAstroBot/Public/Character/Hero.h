@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "BaseCharacter.h"
 #include "HeroTypes.h"
+#include "Interfaces/PickupInterface.h"
 #include "Hero.generated.h"
 
 class UHeroOverlay;
@@ -17,7 +18,7 @@ class UInputMappingContext;
 struct FInputActionValue;
 
 UCLASS()
-class BLACKWKVSASTROBOT_API AHero : public ABaseCharacter
+class BLACKWKVSASTROBOT_API AHero : public ABaseCharacter, public IPickupInterface
 {
 	GENERATED_BODY()
 
@@ -34,6 +35,10 @@ public:
 	                         class AController* EventInstigator, AActor* DamageCauser) override;
 
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
+
+	virtual void SetOverlappingItem(AItem* Item) override;
+
+	virtual void AddSouls(ASoul* Soul) override;
 
 protected:
 	virtual void BeginPlay() override;

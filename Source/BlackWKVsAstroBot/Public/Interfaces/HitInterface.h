@@ -24,6 +24,8 @@ public:
 	// if pure virtual function of interface, need + " = 0"
 	// virtual void GetHit(const FVector& ImpactPoint) = 0;
 
+	// 为了在蓝图类中播放声音，将此改为BlueprintNativeEvent
+	// BlueprintNativeEvent是可以在蓝图类中重写C++方法
 	UFUNCTION(BlueprintNativeEvent)
 	void GetHit(const FVector& ImpactPoint, AActor* Hitter);
 };

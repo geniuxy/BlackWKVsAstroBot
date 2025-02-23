@@ -88,6 +88,16 @@ void AHero::GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter)
 		ActionState = EActionState::EAS_HitReaction;
 }
 
+void AHero::SetOverlappingItem(AItem* Item)
+{
+	OverlappingItem = Item;
+}
+
+void AHero::AddSouls(ASoul* Soul)
+{
+	UE_LOG(LogTemp, Warning, TEXT("ASlashCharacter::AddSouls"));
+}
+
 
 void AHero::Move(const FInputActionValue& Value)
 {

@@ -48,17 +48,17 @@ void AItem::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
                             UPrimitiveComponent* OtherComp, int OtherBodyIndex, bool bFromSweep,
                             const FHitResult& SweepResult)
 {
-	AHero* Hero = Cast<AHero>(OtherActor);
-	if (Hero)
-		Hero->SetOverlappingWeapon(this);
+	IPickupInterface* PickupInterface = Cast<IPickupInterface>(OtherActor);
+	if (PickupInterface)
+		PickupInterface->SetOverlappingItem(this);
 }
 
 void AItem::ExitSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                               UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	AHero* Hero = Cast<AHero>(OtherActor);
-	if (Hero)
-		Hero->SetOverlappingWeapon(nullptr);
+	IPickupInterface* PickupInterface = Cast<IPickupInterface>(OtherActor);
+	if (PickupInterface)
+		PickupInterface->SetOverlappingItem(nullptr);
 }
 
 // Called every frame
