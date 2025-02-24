@@ -18,10 +18,12 @@ protected:
 	virtual void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	                             UPrimitiveComponent* OtherComp, int OtherBodyIndex, bool bFromSweep,
 	                             const FHitResult& SweepResult) override;
+
 private:
 	UPROPERTY(EditAnywhere, Category = "Soul Properties")
 	int32 Soul;
 
 public:
-	FORCEINLINE int32 GetValueOfSoul() const {return Soul;}
+	FORCEINLINE int32 GetValueOfSoul() const { return Soul; }
+	FORCEINLINE void SetSoul(int32 NumOfSoul) { Soul = NumOfSoul; }
 };

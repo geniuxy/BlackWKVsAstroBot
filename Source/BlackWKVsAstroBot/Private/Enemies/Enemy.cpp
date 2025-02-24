@@ -10,6 +10,7 @@
 #include "Perception/PawnSensingComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "HUD/HealthBarComponent.h"
+#include "Item/Soul.h"
 #include "Item/Weapons/Weapon.h"
 #include "Kismet/GameplayStatics.h"
 #include "Navigation/PathFollowingComponent.h"
@@ -139,6 +140,13 @@ void AEnemy::Die()
 	SetLifeSpan(5.f);
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 	SetWeaponCollision(ECollisionEnabled::NoCollision);
+	UWorld* World = GetWorld();
+	if (World && SoulClass && Attributes)
+	{
+		ASoul* SpawnSoul = World->SpawnActor<ASoul>(SoulClass, GetActorLocation(), GetActorRotation());
+		if (SpawnSoul)
+			SpawnSoul->SetSoul(Attributes->GetCurrentSoul());
+	}
 }
 
 void AEnemy::HandleDamage(float DamageAmount)

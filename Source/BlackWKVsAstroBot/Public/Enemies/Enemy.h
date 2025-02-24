@@ -8,6 +8,7 @@
 #include "Perception/PawnSensingComponent.h"
 #include "Enemy.generated.h"
 
+class ASoul;
 enum class EEnemyState : uint8;
 class AAIController;
 class UHealthBarComponent;
@@ -124,6 +125,9 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AWeapon> WeaponClass;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<ASoul> SoulClass;
 
 	virtual bool CanAttack() override;
 	bool CanPatrol();
