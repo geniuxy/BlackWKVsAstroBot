@@ -22,6 +22,8 @@ public:
 
 	void AddCurrentGolds(int32 ValueOfGold);
 
+	void RegenStamina(float DeltaTime);
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -33,15 +35,30 @@ private:
 	float MaxHealth = 100.f;
 
 	UPROPERTY(EditAnywhere, Category="Actor Attributes")
+	float Stamina = 120.f;
+
+	UPROPERTY(EditAnywhere, Category="Actor Attributes")
+	float MaxStamina = 120.f;
+
+	UPROPERTY(EditAnywhere, Category="Actor Attributes")
 	int32 CurrentCoin = 0.f;
 
 	UPROPERTY(EditAnywhere, Category="Actor Attributes")
 	int32 CurrentSoul = 0.f;
 
+	UPROPERTY(EditAnywhere, Category="Actor Attributes")
+	float DodgeCost = 20.f;
+	
+	UPROPERTY(EditAnywhere, Category="Actor Attributes")
+	float RegenStaminaRate = 5.f;
 public:
 	void ReceiveDamage(float Damage);
+	void UseStamina(float StaminaCost);
 	float GetHealthPercent();
+	float GetStaminaPercent();
 	bool IsAlive();
 	FORCEINLINE int32 GetCurrentCoin() const {return CurrentCoin;}
 	FORCEINLINE int32 GetCurrentSoul() const {return CurrentSoul;}
+	FORCEINLINE float GetStamina() const {return Stamina;}
+	FORCEINLINE float GetDodgeCost() const {return DodgeCost;}
 };

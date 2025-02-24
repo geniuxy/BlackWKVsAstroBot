@@ -58,6 +58,12 @@ void AHero::BeginPlay()
 void AHero::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (Attributes && HeroOverlay)
+	{
+		Attributes->RegenStamina(DeltaTime);
+		HeroOverlay->SetStaminaBarPercent(Attributes->GetStaminaPercent());
+	}
 }
 
 void AHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -190,10 +196,12 @@ void AHero::Attack()
 
 void AHero::Dodge()
 {
-	if (CanDodge())
+	if (CanDodge() && HeroOverlay)
 	{
 		PlayDodgeMontage();
 		ActionState = EActionState::EAS_Dodging;
+		Attributes->UseStamina(Attributes->GetDodgeCost());
+		HeroOverlay->SetStaminaBarPercent(Attributes->GetStaminaPercent());
 	}
 }
 
@@ -308,7 +316,8 @@ bool AHero::CanArm()
 
 bool AHero::CanDodge()
 {
-	return ActionState == EActionState::EAS_UnOccupied;
+	return ActionState == EActionState::EAS_UnOccupied &&
+		Attributes && Attributes->GetStamina() > Attributes->GetDodgeCost();
 }
 
 void AHero::InitializeEnhancedInput()
@@ -353,6 +362,6 @@ void AHero::Die()
 	Super::Die();
 
 	ActionState = EActionState::EAS_Dead;
-	
+
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
