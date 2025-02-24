@@ -71,6 +71,7 @@ void AHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AHero::Jump);
 		EnhancedInputComponent->BindAction(EquipAction, ETriggerEvent::Triggered, this, &AHero::Equip);
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &AHero::Attack);
+		EnhancedInputComponent->BindAction(DodgeAction, ETriggerEvent::Triggered, this, &AHero::Dodge);
 	}
 }
 
@@ -187,6 +188,15 @@ void AHero::Attack()
 	}
 }
 
+void AHero::Dodge()
+{
+	if (CanDodge())
+	{
+		PlayDodgeMontage();
+		ActionState = EActionState::EAS_Dodging;
+	}
+}
+
 void AHero::PlayAttackMontage()
 {
 	Super::PlayAttackMontage();
@@ -236,6 +246,12 @@ void AHero::AttackEnd()
 	ActionState = EActionState::EAS_UnOccupied;
 }
 
+void AHero::DodgeEnd()
+{
+	Super::DodgeEnd();
+	ActionState = EActionState::EAS_UnOccupied;
+}
+
 void AHero::HitReactEnd()
 {
 	ActionState = EActionState::EAS_UnOccupied;
@@ -254,6 +270,13 @@ void AHero::PlayEquipMontage(FName SectionName)
 		AnimInstance->Montage_Play(EquipMontage);
 		AnimInstance->Montage_JumpToSection(SectionName, EquipMontage);
 	}
+}
+
+void AHero::PlayDodgeMontage()
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && DodgeMontage)
+		AnimInstance->Montage_Play(DodgeMontage);
 }
 
 void AHero::DisArm()
@@ -281,6 +304,11 @@ bool AHero::CanDisArm()
 bool AHero::CanArm()
 {
 	return ActionState == EActionState::EAS_UnOccupied && HeroState == EHeroState::EHS_UnEquipped && EquippedWeapon;
+}
+
+bool AHero::CanDodge()
+{
+	return ActionState == EActionState::EAS_UnOccupied;
 }
 
 void AHero::InitializeEnhancedInput()

@@ -99,6 +99,10 @@ void ABaseCharacter::AttackEnd()
 {
 }
 
+void ABaseCharacter::DodgeEnd()
+{
+}
+
 bool ABaseCharacter::CanAttack()
 {
 	return false;

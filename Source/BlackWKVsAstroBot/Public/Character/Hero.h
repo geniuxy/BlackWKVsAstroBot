@@ -27,7 +27,7 @@ public:
 	AHero();
 
 	virtual void Tick(float DeltaTime) override;
-
+	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual void Jump() override;
@@ -70,6 +70,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input)
 	UInputAction* AttackAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input)
+	UInputAction* DodgeAction;
+
 	/**
 	 * callbacks for inputs
 	 */
@@ -77,6 +80,7 @@ protected:
 	void Look(const FInputActionValue& Value);
 	void Equip();
 	virtual void Attack() override;
+	void Dodge();
 
 	/**
 	 * Montage functions
@@ -86,7 +90,11 @@ protected:
 
 	void PlayEquipMontage(FName SectionName);
 
+	void PlayDodgeMontage();
+
 	virtual void AttackEnd() override;
+
+	virtual void DodgeEnd() override;
 
 	UFUNCTION(BlueprintCallable)
 	void HitReactEnd();
@@ -134,10 +142,14 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = Montages)
 	UAnimMontage* EquipMontage;
 
+	UPROPERTY(EditDefaultsOnly, Category = Montages)
+	UAnimMontage* DodgeMontage;
+
 	bool CanDisArm();
 
 	bool CanArm();
 
+	bool CanDodge();
 public:
 	FORCEINLINE void SetOverlappingWeapon(AItem* Item) { OverlappingItem = Item; }
 	FORCEINLINE EHeroState GetHeroState() const { return HeroState; }
